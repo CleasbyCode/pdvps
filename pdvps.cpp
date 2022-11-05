@@ -1,4 +1,4 @@
-// PNG Data Vehicle for Twitter, PowerShell Edition (PDVPS) v1.0.Created by Nicholas Cleasby (@CleasbyCode) 1/11/2022.
+// PNG Data Vehicle for Twitter, PowerShell Edition (PDVPS) v1.0. Created by Nicholas Cleasby (@CleasbyCode) 1/11/2022.
 
 #include <fstream>
 #include <algorithm>
