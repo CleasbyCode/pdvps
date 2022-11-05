@@ -14,7 +14,7 @@ This program is really just an amateurish experiment of mine in testing if I cou
 
 For more information on the embedded scripts within the default PNG image, see the ***scripts_info.txt*** file supplied with this repo.
 
-For information about PNG image settings and arbitary data preservation for Twitter, visit the relevant link at: [***pdvzip***](https://github.com/CleasbyCode/pdvzip#png-image-requirements-for-arbitrary-data-preservation).
+For information about PNG image settings and arbitrary data preservation for Twitter, visit the relevant link at: [***pdvzip***](https://github.com/CleasbyCode/pdvzip#png-image-requirements-for-arbitrary-data-preservation).
 
 Always use file extensions for your data file: my_doc.pdf, my_video.mp4, my_program.py, etc. A filename without an extension will be considered an '.exe' file.
 
