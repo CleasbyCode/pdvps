@@ -10,7 +10,7 @@ Works for both Windows and *Linux.
 
 PDVPS is similar to my other program [***pdvzip***](https://github.com/CleasbyCode/pdvzip). The two major differences in this **pdv** edition are **1).** It is supplied with a default PNG image that you use to embed your file. The image file is small in size, which maximises the amount of data you can embed (5,234,608 bytes, almost 5MB), it also substantially reduces the required C++ code of the main program. **2).** There is an embedded PowerShell script within this default PNG image that is used to extract and open/play/run (depending on media type) your embedded file. This eliminates the need to use an external unzip tool. 
 
-This program is really just an amateurish experiment of mine in testing if I could achieve some practical use of PowerShell code embedded within a PNG image.
+This program is really just a simple experiment of mine in testing if I could achieve some practical use of PowerShell code embedded within a PNG image.
 
 For more information on the embedded scripts within the default PNG image, see the ***scripts_info.txt*** file supplied with this repo.
 
