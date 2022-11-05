@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 	if (argc == 2 && std::string(argv[1]) == "--info") {
 		std::cout << "\nPNG Data Vehicle for Twitter, PowerShell Edition (PDVPS) v1.0. Created by Nicholas Cleasby (@CleasbyCode) 1/11/2022.\n\n"
 			 << "PDVPS enables you to embed any file (max file size 5,234,608 bytes) within a tweetable and 'executable' PNG image.\n\n"
-			 << "For further information, please visit https://github.com/CleasbyCode/pdvzip\n\n";}
+			 << "For further information, please visit https://github.com/CleasbyCode/pdvps\n\n";}
 	else if (argc < 2 || argc > 2) {
 		std::cout << "\nUsage:  pdvps  <your_file>\n\tpdvps  --info\n\n";
 	}
