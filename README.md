@@ -12,7 +12,7 @@ PDVPS is similar to my other program [***pdvzip***](https://github.com/CleasbyCo
 
 This program is really just an amateurish experiment of mine in testing if I could make some use of PowerShell code embedded within a PNG image.
 
-For more information on the embedded scripts within the default PNG image, see **scripts_info.txt** file supplied with this repo.
+For more information on the embedded scripts within the default PNG image, see the ***scripts_info.txt*** file supplied with this repo.
 
 For information about image settings and arbitary data preservation for Twitter, visit [***pdvzip***](https://github.com/CleasbyCode/pdvzip#png-image-requirements-for-arbitrary-data-preservation).
 
@@ -58,13 +58,12 @@ G:\demo> .\pdv_image_file.cmd
 
 **Image Example**  
 
-[Twitter. Image is embedded with an MP4 video file. Click the image to fully expand it, then
-  right-click image, select "Save image as..." from menu. Run image as per instructions above. ](https://twitter.com/CleasbyCode/status/1579418557762322432)
+[Twitter](https://twitter.com/CleasbyCode/status/1579418557762322432) 
+Image is embedded with an MP4 video file. Click the image to fully expand it, then right-click image, select "Save image as..." from menu. Run image as per instructions above.
 
-**Video Example (YouTube)**
-[YouTube. Linux demo of pdvps embedding a PDF document within the PNG Image, then running the image file
-  to extract and display the PDF document. Followed by Tweeting the PNG Image and saving it to a Windows
-  machine, where we run it again to extract and display the PDF document on Windows.](https://www.youtube.com/watch_popup?v=19hi4_UFICI) 
+**Video Example**
+[YouTube](https://www.youtube.com/watch_popup?v=19hi4_UFICI)
+Linux demo of pdvps embedding a PDF document within the PNG Image, then running the image fileto extract and display the PDF document. Followed by Tweeting the PNG Image and saving it to a Windows machine, where we run it again to extract and display the PDF document on Windows.
 
 ##
 
