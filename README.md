@@ -66,7 +66,7 @@ Image is embedded with an MP4 video file. Click the image to fully expand it, th
 
 [YouTube](https://www.youtube.com/watch_popup?v=19hi4_UFICI)
 
-Linux demo of pdvps embedding a PDF document within the PNG Image, then running the image fileto extract and display the PDF document. Followed by Tweeting the PNG Image and saving it to a Windows machine, where we run it again to extract and display the PDF document on Windows.
+Linux demo of *pdvps* embedding a PDF document within the PNG Image, then running the image file to extract and display the PDF document. Followed by Tweeting the PNG Image and saving it to a Windows machine, where we run it again to extract and display the PDF document on Windows.
 
 ##
 
