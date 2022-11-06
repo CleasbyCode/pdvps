@@ -58,7 +58,7 @@ G:\demo> .\pdv_image_file.cmd
 
 **Image Example**  
 
-[Twitter](https://twitter.com/CleasbyCode/status/1579418557762322432) 
+[Twitter](https://twitter.com/CleasbyCode/status/1589095798230618114) 
 
 Image is embedded with an MP4 video file. Click the image to fully expand it, then right-click image, select "Save image as..." from menu. Run image as per instructions above.
 
@@ -66,7 +66,7 @@ Image is embedded with an MP4 video file. Click the image to fully expand it, th
 
 [YouTube](https://www.youtube.com/watch_popup?v=d7QjxLWQ0kM)
 
-Linux demo of *pdvps* embedding a PDF document within the PNG Image, then running the image file to extract and display the PDF document. Followed by tweeting the PNG Image and saving it to a Windows machine, where we run it again to extract and display the PDF document on Windows.
+Linux demo of *pdvps* embedding a PDF document within the PNG Image, then running the image file to extract and display the PDF document. Followed by tweeting the PNG image and saving it to a Windows machine, where we run it again to extract and display the PDF document on Windows.
 
 ##
 
