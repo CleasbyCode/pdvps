@@ -34,6 +34,13 @@ $ ./pdvps
 Usage:  pdvps  <your_file>
         pdvps  --info
 
+$ ./pdvps my_document.pdf
+
+Created output file 'pdv_my_document.pdf.png' 4232948 bytes.
+
+All Done!
+
+$
 ```
 
 Once your file has been embedded within the PNG image, it's ready to be shared (tweeted) or '*executed*' whenever you want to extract and open/play/run (depending on media type) your embedded file.
