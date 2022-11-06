@@ -23,10 +23,20 @@ strings to the beginning '<#' and end '#>' of the PNG file.
 6. Change into the "pdvps_extracted" directory.
 7. Get PowerShell to run the "pdvps_tmp.ps1" file, which will start the main PowerShell script embedded in the image.
 
-bKGD
+bKGD chunk
 
-REM;clear;export pdvps_file="$0";echo 'Clear-Host;New-Item pdvps_extracted -itemtype directory;$bt=[System.IO.File]::ReadAllBytes($env:pdvps_file);$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x23;$bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;[System.IO.File]::WriteAllBytes("./pdvps_extracted/pdvps_tmp.ps1", $bt);Clear-Host;Move-Item $env:pdvps_file -Destination pdvps_extracted -Force;Set-Location pdvps_extracted;./pdvps_tmp.ps1'|pwsh;read -p "Please hit Enter to continue...";clear;exit;
-#&cls&powershell Clear-Host;New-Item pdvps_extracted -itemtype directory;$bt=[System.IO.File]::ReadAllBytes('%~dpnx0');$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x23;$bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;[System.IO.File]::WriteAllBytes('.\pdvps_extracted\pdvps_tmp.ps1', $bt);Clear-Host;Move-Item '"%~dpnx0"' -Destination .\pdvps_extracted\pdv_image.png -Force;Set-Location .\pdvps_extracted\;powershell -executionpolicy bypass -file .\pdvps_tmp.ps1&cls&exit
+REM;clear;export pdvps_file="$0";echo 'Clear-Host;New-Item pdvps_extracted -itemtype directory;
+$bt=[System.IO.File]::ReadAllBytes($env:pdvps_file);$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x23;
+$bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;
+[System.IO.File]::WriteAllBytes("./pdvps_extracted/pdvps_tmp.ps1", $bt);
+Clear-Host;Move-Item $env:pdvps_file -Destination pdvps_extracted -Force;
+Set-Location pdvps_extracted;./pdvps_tmp.ps1'|pwsh;read -p "Please hit Enter to continue...";clear;exit;
+#&cls&powershell Clear-Host;New-Item pdvps_extracted -itemtype directory;
+$bt=[System.IO.File]::ReadAllBytes('%~dpnx0');$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x23;
+$bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;
+[System.IO.File]::WriteAllBytes('.\pdvps_extracted\pdvps_tmp.ps1', $bt);
+Clear-Host;Move-Item '"%~dpnx0"' -Destination .\pdvps_extracted\pdv_image.png -Force;
+Set-Location .\pdvps_extracted\;powershell -executionpolicy bypass -file .\pdvps_tmp.ps1&cls&exit
 
 A. Linux Part
 
@@ -34,10 +44,21 @@ REM; # used by Windows to ignore the Linux part...
 clear;
 export pdvps_file="$0";
 
-# This long echo command contains a number of Powershell commands which it |pipes
-# to the Linux pwsh program (see Windows Part).
+# This long echo command contains a number of Powershell commands which it |pipes to the Linux pwsh (PowerShell) program
 
-echo 'Clear-Host;New-Item pdvps_extracted -itemtype directory;$bt=[System.IO.File]::ReadAllBytes($env:pdvps_file);$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x23;$bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;[System.IO.File]::WriteAllBytes("./pdvps_extracted/pdvps_tmp.ps1", $bt);Clear-Host;Move-Item $env:pdvps_file -Destination pdvps_extracted -Force;Set-Location pdvps_extracted;./pdvps_tmp.ps1'|pwsh;
+echo 'Clear-Host;
+	New-Item pdvps_extracted -itemtype directory;		# (1)
+	$bt=[System.IO.File]::ReadAllBytes($env:pdvps_file);	# (2)
+	$bt[0]=0x0d;$bt[1]=0x3c;				# (3)
+	$bt[2]=0x23;						# (3)
+	$bt[$bt.Length-3]=0x0d;					# (3)	
+	$bt[$bt.Length-2]=0x23;					# (3)
+	$bt[$bt.Length-1]=0x3e;					# (3)
+	[System.IO.File]::WriteAllBytes("./pdvps_extracted/pdvps_tmp.ps1", $bt);	# (4)
+	Clear-Host;
+	Move-Item $env:pdvps_file -Destination pdvps_extracted -Force;		# (5)
+	Set-Location pdvps_extracted;						# (6)
+	./pdvps_tmp.ps1'|pwsh;					# (7)
 
 read -p "Please hit Enter to continue...";
 clear;
@@ -49,7 +70,8 @@ B. Windows Part
 &powershell Clear-Host;
 New-Item pdvps_extracted -itemtype directory;  	# (1)
 $bt=[System.IO.File]::ReadAllBytes('%~dpnx0'); 	# (2)
-$bt[0]=0x0d;$bt[1]=0x3c;			# (3)
+$bt[0]=0x0d;					# (3)
+$bt[1]=0x3c;					# (3)
 $bt[2]=0x23;					# (3)	
 $bt[$bt.Length-3]=0x0d;	 			# (3)
 $bt[$bt.Length-2]=0x23;  			# (3)
@@ -84,21 +106,36 @@ Again, in a nutshell, the PowerShell script does the following (for both Linux a
 8. Remove "pdv_tmp_f2x83.tmp" file.
 9. Attempt to open/play/run file, depending on its media type.
 
-hIST
+hIST chunk
+
+<The user data file gets embedded here, before the PowerShell Script>
 
 PDVPS
 #>
-Clear-Host;$os='Win';$tr=1052;$fl=;$ext='';$app=0;$m='media_file'+$ext;if($ext -eq '.py'){$app='python3 '};$wa='';$la='';if(Test-Path -Path '/usr/bin'){$os='Linux';if($ext -eq '.ps1'){$app='pwsh '}}else{if($ext -eq '.ps1'){$app='powershell '}};if($ext -eq '.ps1' -And $os -eq 'Win'){$m='.\'+$m};$ver=$PSVersionTable.PSVersion.Major;if($ver -lt 5){Write-Host "`r`nError: PowerShell Version 5 or later is required to make this work.`n`nScript will quit in a few seconds.";Start-Sleep -Seconds 7;exit};$pn=$MyInvocation.MyCommand.Definition;$n=$MyInvocation.MyCommand.Name;$tmp=$pn.Replace($n, "pdv_tmp_f2x83.tmp");Copy-Item -Path $pn -Destination $tmp;$bt=[System.IO.File]::ReadAllBytes($pn);$trunc=$bt[$tr..($bt.Length-1)];if($ver -gt 5) {Set-Content -value $trunc -AsByteStream -path "$($tmp)"}else{Set-Content -value $trunc -encoding byte -path "$($tmp)"};Remove-Item $pn;$mp=$pn.Replace($n, $m);if(Test-Path -Path $mp){Remove-Item -Path $mp -Force;Start-Sleep -Seconds 1};$stream=[System.IO.File]::OpenRead($tmp);$br=New-Object byte[] $fl;$bt=$stream.Read($br,0,$fl);$ostream=[System.IO.File]::OpenWrite($mp);$ostream.Write($br,0,$bt);$ostream.close();$stream.close();Remove-Item $tmp;Clear-Host;if($os -eq 'Linux'){if($app){$app+$m,$la |sh;Write-Host}elseif($ext -eq '.exe'){chmod +x $m;iex ./$m$la}else{chmod -x $m;ii $m}}else{if($app){&cmd /c $app $m$wa;Write-Host;Pause}elseif($ext -eq '.exe'){Write-Host "exe file found!";&cmd /c $m$wa;Write-Host;Pause}else{ii $m}}
+Clear-Host;$os='Win';$tr=1052;$fl=;$ext='';$app=0;$m='media_file'+$ext;if($ext -eq '.py'){$app='python3 '};
+$wa='';$la='';if(Test-Path -Path '/usr/bin'){$os='Linux';if($ext -eq '.ps1'){$app='pwsh '}}else{if($ext -eq '.ps1')
+{$app='powershell '}};if($ext -eq '.ps1' -And $os -eq 'Win'){$m='.\'+$m};$ver=$PSVersionTable.PSVersion.Major;
+if($ver -lt 5){Write-Host "`r`nError: PowerShell Version 5 or later is required to make this work.`n`nScript will quit in a few seconds.";
+Start-Sleep -Seconds 7;exit};$pn=$MyInvocation.MyCommand.Definition;$n=$MyInvocation.MyCommand.Name;
+$tmp=$pn.Replace($n, "pdv_tmp_f2x83.tmp");Copy-Item -Path $pn -Destination $tmp;$bt=[System.IO.File]::ReadAllBytes($pn);
+$trunc=$bt[$tr..($bt.Length-1)];if($ver -gt 5) {Set-Content -value $trunc -AsByteStream -path "$($tmp)"}
+else{Set-Content -value $trunc -encoding byte -path "$($tmp)"};Remove-Item $pn;$mp=$pn.Replace($n, $m);
+if(Test-Path -Path $mp){Remove-Item -Path $mp -Force;Start-Sleep -Seconds 1};$stream=[System.IO.File]::OpenRead($tmp);
+$br=New-Object byte[] $fl;$bt=$stream.Read($br,0,$fl);$ostream=[System.IO.File]::OpenWrite($mp);$ostream.Write($br,0,$bt);
+$ostream.close();$stream.close();Remove-Item $tmp;Clear-Host;if($os -eq 'Linux'){if($app){$app+$m,$la |sh;
+Write-Host}elseif($ext -eq '.exe'){chmod +x $m;iex ./$m$la}else{chmod -x $m;ii $m}}else{if($app){&cmd /c $app $m$wa;
+Write-Host;Pause}elseif($ext -eq '.exe'){Write-Host "exe file found!";&cmd /c $m$wa;Write-Host;Pause}else{ii $m}}
 <#
 
 #> End comment-block, Start of PowerShell Script, interpret what follows....
+
 Clear-Host;
 $os='Win';
-$tr=1052;	# (3) $tr Truncate variable value. Number of bytes to cut from the variable $bt,
+$tr=1052;	# Related to (3). $tr Truncate variable const value. Number of bytes to cut from the variable $bt,
 		# which will store the whole PNG file content. Once truncated, User file now 
-		# starts from the beginning of the $bt variable file content.
+		# starts from the beginning of the $bt variable content.
 
-$fl=;		# (5) $fl user file length variable value (bytes) updated by C++ program.
+$fl=;		# Related to (5). $fl user file length variable value (bytes) updated by C++ program.
 		# Tells PowerShell how many bytes to read in from the start of $bt variable,
 		# which should be the entirety of the embedded user data file.
 		# Create a new file from these bytes, discard the rest of $bt content after this $fl value.
@@ -142,12 +179,13 @@ else
 Remove-Item $pn;				# (4)
 $mp=$pn.Replace($n, $m);
 if(Test-Path -Path $mp)
-	{Remove-Item -Path $mp -Force;Start-Sleep -Seconds 1};
+	{Remove-Item -Path $mp -Force;
+	Start-Sleep -Seconds 1};
 $stream=[System.IO.File]::OpenRead($tmp);
 $br=New-Object byte[] $fl;
 $bt=$stream.Read($br,0,$fl);			# (5)
 
-<Repair code insert here, if required>		# (6)
+<Repair code inserted here, if required>	# (6)
 
 # If required, PowerShell 'repair code' for the user data file gets inserted here, 
 # by the C++ program. The user data file CANNOT contain any occurrence of the PowerShell
@@ -159,11 +197,11 @@ $bt=$stream.Read($br,0,$fl);			# (5)
 # before writing the extracted # user file to disk.
 
 # (6)
-# Start of repair code example
+# Start of repair code example...
 
 $i=-1;
 
-# PowerShell array containing index location values for each byte to change
+# PowerShell array containing index location values for each byte to change back
 # (index values created by C++ program).
 
 $idx=@(1002,2381,38129,39912,59182, etc); 
@@ -173,7 +211,7 @@ while(++$i -lt $idx.count)
 				# for each index location.
 }
 
-# End of repair code example
+# End of repair code example.
 
 $ostream=[System.IO.File]::OpenWrite($mp);
 $ostream.Write($br,0,$bt);	# (7)
@@ -185,9 +223,10 @@ Clear-Host;
 # Running the extracted user file requires different methods 
 # depending on file type and operating system.
 
-# Open extracted file on Linux. Is it a Python or PowerShell file? 
-# Is it an .exe file? Or is it something else?
-# $m variable is the extracted media file name
+# Open extracted file on Linux... 
+
+# Is it a Python or PowerShell file? Is it an executable file? Or is it something else?
+# $m variable is the extracted media file name.
 
 if($os -eq 'Linux'){
 	if($app){ 
@@ -196,19 +235,25 @@ if($os -eq 'Linux'){
 		# ($app ="python3" or "pwsh", depending on file extension)
 		# ($la Linux arguments, command-line arguments string variable) 
 
-		$app+$m,$la |sh;
-
+		$app+$m,$la |sh;	# e.g. "python3 media_file.py <arguments>"
+					# e.g. "pwsh media_file.ps1 <arugments>"
+					# |piped to the sh command.
 		Write-Host} 	
 
 	elseif($ext -eq '.exe'){
 		chmod +x $m;
 		iex ./$m$la	# (9) .exe (Invoke-Expression, iex)
+				# e.g "Invoke-Expression ./media_file.exe <arguments>
 	}
 	else{
 		chmod -x $m;
 		ii $m}}		# (9) Anything else (Invoke-Item, ii)
+				# e.g. "Invoke Item media_file.mp3"
 
-# Open extracted file on Windows
+# Open extracted file on Windows...
+
+# Is it a Python or PowerShell file? Is it an executable file? Or is it something else?
+# $m variable is the extracted media file name.
 
 else{
 	if($app){
@@ -217,7 +262,8 @@ else{
 		# ($app ="python3" or "powershell", depending on file extension
 		# ($wa Windows arguments, command-line arguments string variable)
 
-		&cmd /c $app$m$wa;
+		&cmd /c $app$m$wa;	# e.g. "&cmd /c python3 media_file.py <arguments>"
+					# e.g. "&cmd /c powershell .\media_file.ps1 <arguments>"
 
 		Write-Host;
 		Pause   	
@@ -226,12 +272,13 @@ else{
 
 			# (9) .exe (run this directly without need of any other command)
 
-	 		&cmd /c $m$wa;
+	 		&cmd /c $m$wa;	# e.g. "&cmd /c media_file.exe <arguments>"
 
 			Write-Host;
 			Pause   
 		}
-		else{ii $m}}	# (9) Anthing else (Invoke-Item, ii)
+	else{ii $m}}	# (9) Anthing else (Invoke-Item, ii)
+			# e.g. "Invoke-Item media_file.pdf"
 
 <# End of PowerShell script (Start comment-block, ignore what follows...)
 
