@@ -1,8 +1,8 @@
 
 Two scripts are embedded within the default PNG polyglot file.
 
-1. Linux and Windows shell/batch, with PowerShell commands (this runs first)
-2. Main PowerShell Script
+1. Linux and Windows shell/batch script, with PowerShell commands (this runs first).
+2. Main PowerShell Script.
 
 The Linux and Windows shell/batch commands run first. This is in two parts:-
 
@@ -13,7 +13,7 @@ Found near top of PNG image within the "bKGD" chunk.
 
 In a nutshell, these commands do the following for both Linux and Windows:-
 
-1. Create a new directory "pdvps_extracted" in current directory.
+1. Create a new directory "pdvps_extracted" in the current directory.
 2. Read in all bytes from the original PNG polyglot file.
 3. Modify a number of bytes in the PNG file to add PowerShell Comment-block 
 strings to the beginning '<#' and end '#>' of the PNG file.
@@ -93,22 +93,22 @@ and write it to disk as a new file, it will then attempt to open/play/run the fi
 
 Again, in a nutshell, the PowerShell script does the following (for both Linux and Windows).
 
-1. Make a copy of the "pdvps_tmp.ps1" file and write it to disk as "pdv_tmp_f2x83.tmp"
-2. Read in all bytes of the file "pdv_tmp_f2x83.tmp" into $bt variable
-3. Truncate/cut top part of file from $bt until start of user data file (see $tr value)
+1. Make a copy of the "pdvps_tmp.ps1" file and write it to disk as "pdv_tmp_f2x83.tmp".
+2. Read in all bytes of the file "pdv_tmp_f2x83.tmp" into the $bt variable.
+3. Truncate/cut the top part of file from $bt until the start of user data file (see $tr value).
 4. Remove "pdvps_tmp.ps1" file.
 
-5. Create New-Object (file), read in $fl bytes, file length size of user file
+5. Create New-Object (file), read in $fl bytes, file length, size of user file.
 (see $fl value), from $bt, discard the rest.
 
 6. Start "repair code" on bytes if required (see comments below on "repair code").
-7. Write new file to disk within "pdvps_extracted" folder as "media_file.[extension]", e.g "media_file.mp4"
+7. Write new file to disk within "pdvps_extracted" folder as "media_file.[extension]", e.g "media_file.mp4".
 8. Remove "pdv_tmp_f2x83.tmp" file.
 9. Attempt to open/play/run file, depending on its media type.
 
 hIST chunk
 
-<The user data file gets embedded here, before the PowerShell Script>
+<The user data file will be embedded here, before the main PowerShell script>
 
 PDVPS
 #>
@@ -127,7 +127,7 @@ Write-Host}elseif($ext -eq '.exe'){chmod +x $m;iex ./$m$la}else{chmod -x $m;ii $
 Write-Host;Pause}elseif($ext -eq '.exe'){Write-Host "exe file found!";&cmd /c $m$wa;Write-Host;Pause}else{ii $m}}
 <#
 
-#> End comment-block, Start of PowerShell Script, interpret what follows....
+#> End comment-block, start of main PowerShell script, interpret what follows....
 
 Clear-Host;
 $os='Win';
@@ -194,7 +194,7 @@ $bt=$stream.Read($br,0,$fl);			# (5)
 # The C++ program will check the file and if found, modify a byte for every occurrence
 # of this string. It will store index locations of each modified byte in a larger string
 # containing PowerShell code, which will put back the original '#' character that was changed,
-# before writing the extracted # user file to disk.
+# before writing the extracted user file to disk.
 
 # (6)
 # Start of repair code example...
@@ -236,7 +236,7 @@ if($os -eq 'Linux'){
 		# ($la Linux arguments, command-line arguments string variable) 
 
 		$app+$m,$la |sh;	# e.g. "python3 media_file.py <arguments>"
-					# e.g. "pwsh media_file.ps1 <arugments>"
+					# e.g. "pwsh media_file.ps1 <arguments>"
 					# |piped to the sh command.
 		Write-Host} 	
 
@@ -248,7 +248,7 @@ if($os -eq 'Linux'){
 	else{
 		chmod -x $m;
 		ii $m}}		# (9) Anything else (Invoke-Item, ii)
-				# e.g. "Invoke Item media_file.mp3"
+				# e.g. "Invoke-Item media_file.mp3"
 
 # Open extracted file on Windows...
 
