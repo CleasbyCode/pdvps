@@ -29,13 +29,13 @@ REM;clear;export pdvps_file="$0";echo 'Clear-Host;New-Item pdvps_extracted -item
 $bt=[System.IO.File]::ReadAllBytes($env:pdvps_file);$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x23;
 $bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;
 [System.IO.File]::WriteAllBytes("./pdvps_extracted/pdvps_tmp.ps1", $bt);
-Clear-Host;Move-Item $env:pdvps_file -Destination pdvps_extracted -Force;
+Move-Item $env:pdvps_file -Destination pdvps_extracted -Force;
 Set-Location pdvps_extracted;./pdvps_tmp.ps1'|pwsh;read -p "Please hit Enter to continue...";clear;exit;
 #&cls&powershell Clear-Host;New-Item pdvps_extracted -itemtype directory;
 $bt=[System.IO.File]::ReadAllBytes('%~dpnx0');$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x23;
 $bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;
 [System.IO.File]::WriteAllBytes('.\pdvps_extracted\pdvps_tmp.ps1', $bt);
-Clear-Host;Move-Item '"%~dpnx0"' -Destination .\pdvps_extracted\pdv_image.png -Force;
+Move-Item '"%~dpnx0"' -Destination .\pdvps_extracted\pdv_image.png -Force;
 Set-Location .\pdvps_extracted\;powershell -executionpolicy bypass -file .\pdvps_tmp.ps1&cls&exit
 
 A. Linux Part
@@ -49,18 +49,18 @@ export pdvps_file="$0";
 echo 'Clear-Host;
 	New-Item pdvps_extracted -itemtype directory;		# (1)
 	$bt=[System.IO.File]::ReadAllBytes($env:pdvps_file);	# (2)
-	$bt[0]=0x0d;$bt[1]=0x3c;				# (3)
+	$bt[0]=0x0d;						# (3)
+	$bt[1]=0x3c;						# (3)
 	$bt[2]=0x23;						# (3)
 	$bt[$bt.Length-3]=0x0d;					# (3)	
 	$bt[$bt.Length-2]=0x23;					# (3)
 	$bt[$bt.Length-1]=0x3e;					# (3)
 	[System.IO.File]::WriteAllBytes("./pdvps_extracted/pdvps_tmp.ps1", $bt);	# (4)
-	Clear-Host;
-	Move-Item $env:pdvps_file -Destination pdvps_extracted -Force;		# (5)
-	Set-Location pdvps_extracted;						# (6)
+	Move-Item $env:pdvps_file -Destination pdvps_extracted -Force;			# (5)
+	Set-Location pdvps_extracted;							# (6)
 	./pdvps_tmp.ps1'|pwsh;					# (7)
 
-read -p "Please hit Enter to continue...";
+read -p "Press Enter to Exit.";
 clear;
 exit;
 
@@ -77,7 +77,6 @@ $bt[$bt.Length-3]=0x0d;	 			# (3)
 $bt[$bt.Length-2]=0x23;  			# (3)
 $bt[$bt.Length-1]=0x3e;				# (3)
 [System.IO.File]::WriteAllBytes('.\pdvps_extracted\pdvps_tmp.ps1', $bt);	# (4)
-Clear-Host;
 Move-Item '"%~dpnx0"' -Destination .\pdvps_extracted\pdv_image.png -Force;	# (5)
 Set-Location .\pdvps_extracted\;						# (6)	
 powershell -executionpolicy bypass -file .\pdvps_tmp.ps1			# (7)
