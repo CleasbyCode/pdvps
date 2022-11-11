@@ -9,12 +9,13 @@ The Linux and Windows shell/batch commands run first. This is in two parts:-
 A. Linux shell + PowerShell commands.
 B. Windows batch + PowerShell commands.
 
-Found near top of PNG image within the "bKGD" chunk.
+Found near top of PNG image within the "bKGD" chunk, after the fake IDAT chunk.
 
 In a nutshell, these commands do the following for both Linux and Windows:-
 
 1. Create a new directory "pdvps_extracted" in the current directory.
-2. Read in all bytes from the original PNG polyglot file.
+2. Read in all bytes from the original PNG polyglot file, store in $bt array.
+
 3. Modify a number of bytes in the PNG file to add PowerShell Comment-block 
 strings to the beginning '<#' and end '#>' of the PNG file.
 
@@ -44,7 +45,7 @@ REM; # used by Windows to ignore the Linux part...
 clear;
 export pdvps_file="$0";
 
-# This long echo command contains a number of Powershell commands which it |pipes to the Linux pwsh (PowerShell) program
+# This long echo command contains a number of Powershell commands which it |pipes to the Linux pwsh (PowerShell) program.
 
 echo 'Clear-Host;
 	New-Item pdvps_extracted -itemtype directory;		# (1)
@@ -85,24 +86,24 @@ powershell -executionpolicy bypass -file .\pdvps_tmp.ps1			# (7)
 
 Main PowerShell Script
 
-Found after the embedded, 'encrypted' (xor) user data file within the "hIST" Chunk, before the "IDAT" chunk.
+Found after the embedded, 'encrypted' (xor) user data file within the "hIST" Chunk, before the real "IDAT" chunk.
 
 The PowerShell script will basically "cut" the user data file out of the PNG polyglot image
-and write it to disk as a new file, it will then attempt to open/play/run the file (depending on media type).
+and write it to disk as a new file, it will then attempt to open/play/run the file, depending on media type.
 
 Again, in a nutshell, the PowerShell script does the following (for both Linux and Windows).
 
 1. Read in all the bytes from file "pdvps_tmp.ps1" and store in the $bt array
 2. Start "repair code" on bytes if required (see comments below on "repair code").
 3. Decrypt embedded user data file. (Simple XOR).
-4. Store user file in $trunc, taken from $bt array.
+4. Store user file in $trunc, taken from $bt array, using $tr and $fl variables.
 5. Remove "pdvps_tmp.ps1" file.
-6. Write the contents of $trunc (user media file) to disk. 
+6. Write the contents of $trunc (user media file) to disk, in 'pdvps_extracted' folder. 
 7. Open/Play/Run the extracted media file, depending on its type.
 
 hIST chunk
 
-<The user data file will be embedded here, before the main PowerShell script>
+<The encrypted user data file will be embedded here, before the main PowerShell script>
 
 PDVPS
 
@@ -125,12 +126,12 @@ else{chmod -x $m; ii $m}}else{if($app){&cmd /c $app$m$wa;Pause}elseif($ext -eq '
 Clear-Host;
 $os='Win';
 
-$tr=2043;	# $tr TRuncate variable const value. 
+$tr=2043;	# $tr TRuncate variable const int value. 
 		# $bt array stores the whole PNG file, $tr sets the index location for the start of the embedded user media file in $bt. 
 
-$fl=;		# $fl user File Length variable value (bytes) updated by C++ program.
+$fl=;		# $fl user File Length int variable value (bytes) updated by C++ program.
 		# Tells PowerShell how many bytes to read from the start index ($tr) of the $bt array.
-		# This should be the entirety of the embedded user file, which is stored in $trunc 
+		# This should be the entirety of the embedded user file, which will be stored in $trunc 
 
 $ext='';	# User file extension variable, updated by C++ program, e.g. ($ext='.mp4').
 
@@ -250,7 +251,7 @@ if($os -eq 'Linux'){
 
 		$app+$m,$la |sh;	# e.g. "python3 media_file.py <arguments>"
 					# e.g. "pwsh media_file.ps1 <arguments>"
-					# |piped to the sh command.
+					# |piped to the sh command, which run the program.
 		Write-Host} 	
 
 	elseif($ext -eq '.exe'){
