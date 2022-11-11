@@ -94,15 +94,11 @@ Again, in a nutshell, the PowerShell script does the following (for both Linux a
 
 1. Read in all the bytes from file "pdvps_tmp.ps1" and store in the $bt array
 2. Start "repair code" on bytes if required (see comments below on "repair code").
-
-3. Truncate/cut the top part of file from $bt until the start of user data file (see $tr value).
-4. Remove "pdvps_tmp.ps1" file.
-
-5. Create New-Object (file), read in $fl bytes, file length, size of user file.
-(see $fl value), from $bt, discard the rest.
- 
-7. Write new file to disk within "pdvps_extracted" folder as "media_file.[extension]", e.g "media_file.mp4".
-9. Attempt to open/play/run file, depending on its media type.
+3. Decrypt embedded user data file. (Simple XOR).
+4. Store user file in $trunc, taken from $bt array.
+5. Remove "pdvps_tmp.ps1" file.
+6. Write the contents of $trunc (user media file) to disk. 
+7. Open/Play/Run the extracted media file, depending on its type.
 
 hIST chunk
 
@@ -111,13 +107,17 @@ hIST chunk
 PDVPS
 
 #>
-Clear-Host;$os='Win';$tr=2043;$fl=;$ext='';$app=0;$m='media_file'+$ext;if($ext -eq '.py'){$app='python3 '};$wa='';$la='';if(Test-Path -Path '/usr/bin'){$os='Linux';if($ext -eq '.ps1'){$app='pwsh '}}else{if($ext -eq '.ps1'){$app='powershell '}};if($ext -eq '.ps1' -And $os -eq 'Win'){$m='.\'+$m};$ver=$PSVersionTable.PSVersion.Major;if($ver -lt 5){Write-Host "`r`nError: PowerShell Version 5 or later is required.";
+Clear-Host;$os='Win';$tr=2043;$fl=;$ext='';$app=0;$m='media_file'+$ext;if($ext -eq '.py'){$app='python3 '};
+$wa='';$la='';if(Test-Path -Path '/usr/bin'){$os='Linux';if($ext -eq '.ps1'){$app='pwsh '}}else{if($ext -eq '.ps1'){$app='powershell '}};
+if($ext -eq '.ps1' -And $os -eq 'Win'){$m='.\'+$m};$ver=$PSVersionTable.PSVersion.Major;
+if($ver -lt 5){Write-Host "`r`nError: PowerShell Version 5 or later is required.";
 Start-Sleep -Seconds 6;exit};$pn=$MyInvocation.MyCommand.Definition;$n=$MyInvocation.MyCommand.Name;$bt=[System.IO.File]::ReadAllBytes($pn);
 Write-Host "Decrypting Media File...";$j=704;for($i=$tr; $fl+$tr -gt $i;){$bt[$i]=$bt[$i] -bxor $bt[$j];$i++;$j--;if($j -lt 3) {$j=704}};
 Clear-Host;$trunc=$bt[$tr..($fl+$tr-1)];Remove-Item $pn;$mp=$pn.Replace($n, $m);if(Test-Path -Path $mp){Remove-Item -Path $mp -Force;
-Start-Sleep -Seconds 1};if($ver -gt 5) {Set-Content -value $trunc -AsByteStream -path "$($mp)"}else{Set-Content -value $trunc -encoding byte -path "$($mp)"};
-if($os -eq 'Linux'){if($app){$app+$m,$la |sh}elseif($ext -eq '.exe'){chmod +x $m;iex ./$m$la}else{chmod -x $m;
-ii $m}}else{if($app){&cmd /c $app$m$wa;Pause}elseif($ext -eq '.exe'){&cmd /c $m$wa;Pause}else{ii $m}}
+Start-Sleep -Seconds 1};if($ver -gt 5) {Set-Content -value $trunc -AsByteStream -path "$($mp)"}
+else{Set-Content -value $trunc -encoding byte -path "$($mp)"};
+if($os -eq 'Linux'){if($app){$app+$m,$la |sh}elseif($ext -eq '.exe'){chmod +x $m;iex ./$m$la}
+else{chmod -x $m; ii $m}}else{if($app){&cmd /c $app$m$wa;Pause}elseif($ext -eq '.exe'){&cmd /c $m$wa;Pause}else{ii $m}}
 <#
 
 #> End comment-block, start of main PowerShell script, interpret what follows....
@@ -164,18 +164,20 @@ $n=$MyInvocation.MyCommand.Name;
 
 $bt=[System.IO.File]::ReadAllBytes($pn);	# (1)
 
+--------------------------------------------------------------------------------------------------
 <Repair code inserted here, if required>	# (2)
 
 # If required, PowerShell 'repair code' for the user data file gets inserted here, 
 # by the C++ program. The user data file CANNOT contain any occurrence of the PowerShell
-# End Comment-Block string '#>'. This will cause the embedded PowerShell script to fail
-# if it encounters that string anywhere in the user file. 
+# End Comment-Block string '#>'. This will cause the embedded PowerShell script to fail if
+# it encounters that string anywhere in the user file. 
+
 # The C++ program will check the file and if found, modify a byte for every occurrence
 # of this string. It will store index locations of each modified byte in a larger string
 # containing PowerShell code, which will put back the original '#' character that was changed,
 # before writing the extracted user file to disk.
 
-# (6)
+# (2)
 # Start of repair code example...
 
 $i=-1;
@@ -184,46 +186,56 @@ $i=-1;
 # (index values created by C++ program).
 
 $idx=@(1002,2381,38129,39912,59182, etc); 
+
 while(++$i -lt $idx.count) 
 {
-	$br[$idx[$i]]=0x23	# Change modified byte back to original '#' character, 
+	$br[$idx[$i]] = 0x23	# Change modified byte back to original '#' character, 
 				# for each index location.
 }
 
 # End of repair code example.
+--------------------------------------------------------------------------------------------------
 
-# Decrypt the media file using simple XOR 
+# (3) The C++ program has 'encrypted' the media file with simple XOR. 
+# Decrypt it here.
 
 Write-Host "Decrypting Media File...";
 
-$j = 704;
+$j = 704;	# $j variable value is set as the 704th character index location of the PNG file.
 
-for($i = $tr; $fl + $tr -gt $i;){
-	$bt[$i] = $bt[$i] -bxor $bt[$j];
+for($i = $tr; $fl + $tr -gt $i;){ 		# Start 'for loop' at index location $tr, the start index of user data file,
+						# until we reach $fl File Length value of user file.
+						
+	$bt[$i] = $bt[$i] -bxor $bt[$j];	# XOR each character $bt[$i} of user data file against character $bt[$j]
 	$i++;
 	$j--;
 	if($j -lt 3) {
-		$j = 704}
+		$j = 704}			# Reset $j back to the 704th index location once the value is less than 3
 	};
 	
+--------------------------------------------------------------------------------------------------
+
 Clear-Host
 
-$trunc=$bt[$tr..($fl + $tr -1)];  	# $Trunc now contains the user media file. 
-					# $bt array contains whole PNG file, $tr start index of embedded user file, $fl length of user file
-Remove-Item $pn;
+$trunc=$bt[$tr..($fl + $tr -1)];  	# (4) $trunc now contains the user media file. 
+					# $bt array contains whole PNG file, $tr start index of embedded user file, $fl File Length of user file
+					
+Remove-Item $pn;			# (5) Remove "pdvps_tmp.ps1" file.
 
 $mp=$pn.Replace($n, $m);
 
-if(Test-Path -Path $mp)
+if(Test-Path -Path $mp)			# If there already exists a 'pdvps_extracted' folder containing a 'media_file', delete it.
 	{Remove-Item -Path $mp -Force;
 	Start-Sleep -Seconds 1};
 	
 if($ver -gt 5) {
-	Set-Content -value $trunc -AsByteStream -path "$($mp)"}
+	Set-Content -value $trunc -AsByteStream -path "$($mp)"}		# (6) Write the contents of $trunc (user media file) to disk.
 else{
-	Set-Content -value $trunc -encoding byte -path "$($mp)"};
+	Set-Content -value $trunc -encoding byte -path "$($mp)"};	# (6) Write the contents of $trunc (user media file) to disk.
 
-# Running the extracted user file requires different methods depending on file type and operating system.
+--------------------------------------------------------------------------------------------------
+
+# (7) Running the extracted user file requires different methods depending on file type and operating system.
 # Open extracted file on Linux... 
 
 # Is it a Python or PowerShell file? Is it an executable file? Or is it something else?
@@ -232,7 +244,7 @@ else{
 if($os -eq 'Linux'){
 	if($app){ 
 
-		# (9) Python or Powershell? 
+		# (7) Python or Powershell? 
 		# ($app ="python3" or "pwsh", depending on file extension)
 		# ($la Linux arguments, command-line arguments string variable) 
 
@@ -243,15 +255,15 @@ if($os -eq 'Linux'){
 
 	elseif($ext -eq '.exe'){
 		chmod +x $m;
-		iex ./$m$la	# (9) .exe (Invoke-Expression, iex)
+		iex ./$m$la	# (7) .exe (Invoke-Expression, iex)
 				# e.g "Invoke-Expression ./media_file.exe <arguments>
 	}
 	else{
 		chmod -x $m;
-		ii $m}}		# (9) Anything else (Invoke-Item, ii)
+		ii $m}}		# (7) Anything else (Invoke-Item, ii)
 				# e.g. "Invoke-Item media_file.mp3"
 
-# Open extracted file on Windows...
+# (7) Open extracted file on Windows...
 
 # Is it a Python or PowerShell file? Is it an executable file? Or is it something else?
 # $m variable is the extracted media file name.
@@ -259,7 +271,7 @@ if($os -eq 'Linux'){
 else{
 	if($app){
 
-		# (9) Python or PowerShell? 
+		# (7) Python or PowerShell? 
 		# ($app ="python3" or "powershell", depending on file extension
 		# ($wa Windows arguments, command-line arguments string variable)
 
@@ -271,14 +283,14 @@ else{
 		}
 		elseif($ext -eq '.exe'){
 
-			# (9) .exe (run this directly without need of any other command)
+			# (7) .exe (run this directly without need of any other command)
 
 	 		&cmd /c $m$wa;	# e.g. "&cmd /c media_file.exe <arguments>"
 
 			Write-Host;
 			Pause   
 		}
-	else{ii $m}}	# (9) Anthing else (Invoke-Item, ii)
+	else{ii $m}}	# (7) Anthing else (Invoke-Item, ii)
 			# e.g. "Invoke-Item media_file.pdf"
 
 <# End of PowerShell script (Start comment-block, ignore what follows...)
