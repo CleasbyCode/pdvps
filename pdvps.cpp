@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 		}
 		std::string dataSizeLengthString = std::to_string(DATA_SIZE), argsLinux, argsWindows, ext;
 		int pwshInsertIndex[5] = { DATA_SIZE + 2608, DATA_SIZE + 2173, DATA_SIZE + 2166, DATA_SIZE + 2095, DATA_SIZE + 2088 }, 
-			nameLength = DATA_FILE.length(), dot = DATA_FILE.find_last_of('.'), histChunkLengthInsertIndex = 2035, histChunkLength = 1206, bits = 24;
+			nameLength = DATA_FILE.length(), dot = DATA_FILE.find_last_of('.'), histChunkLengthInsertIndex = 2035, histChunkLength = 1204, bits = 24;
 		if (dot < 0 || nameLength - dot == 1) {
 			ext = ".exe";
 		}
