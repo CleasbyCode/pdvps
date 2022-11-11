@@ -1,4 +1,4 @@
-// PNG Data Vehicle for Twitter, PowerShell Edition (PDVPS) v1.0. Created by Nicholas Cleasby (@CleasbyCode) 1/11/2022.
+// PNG Data Vehicle for Twitter, PowerShell Edition (PDVPS) v1.0.Created by Nicholas Cleasby (@CleasbyCode) 1/11/2022.
 
 #include <fstream>
 #include <algorithm>
@@ -30,8 +30,8 @@ int main(int argc, char** argv) {
 			return -1;
 		}
 		std::string dataSizeLengthString = std::to_string(DATA_SIZE), argsLinux, argsWindows, ext;
-		int pwshInsertIndex[5] = { DATA_SIZE + 2132, DATA_SIZE + 1182, DATA_SIZE + 1175, DATA_SIZE + 1104, DATA_SIZE + 1097 }, 
-			nameLength = DATA_FILE.length(), dot = DATA_FILE.find_last_of('.'), histChunkLengthInsertIndex = 1044, histChunkLength = 1454, bits = 24;
+		int pwshInsertIndex[5] = { DATA_SIZE + 2608, DATA_SIZE + 2173, DATA_SIZE + 2166, DATA_SIZE + 2095, DATA_SIZE + 2088 }, 
+			nameLength = DATA_FILE.length(), dot = DATA_FILE.find_last_of('.'), histChunkLengthInsertIndex = 2035, histChunkLength = 1206, bits = 24;
 		if (dot < 0 || nameLength - dot == 1) {
 			ext = ".exe";
 		}
@@ -50,22 +50,25 @@ int main(int argc, char** argv) {
 				return -1;
 			}
 		}
-		const int DATA_FILE_INSERT_INDEX = 1052; char byte;
+		const int DATA_FILE_INSERT_INDEX = 2043; char byte; 
+		int j = 704;
 		std::ifstream readFile(DATA_FILE, std::ios::binary);
-		for (int i = 0; DATA_SIZE > i; i++) {	
-			ImageVec.insert((ImageVec.begin() + DATA_FILE_INSERT_INDEX) + i, byte = readFile.get());
+		for (int i = 0; DATA_SIZE > i; i++) {
+			byte = readFile.get();
+			ImageVec.insert((ImageVec.begin() + DATA_FILE_INSERT_INDEX) + i, byte ^ ImageVec[j]);
+			j--; j = j == 2 ? 704 : j; 
 		}
 		const std::string BLOCK_ID = "#>"; int pwshRepairCodeLength = 0;
 		if (search(ImageVec.begin(), ImageVec.end(), BLOCK_ID.begin(), BLOCK_ID.end()) - ImageVec.begin() <= DATA_SIZE + DATA_FILE_INSERT_INDEX) {
 			std::string index_locations = "";
 			for (int BLOCK_INDEX = 0; DATA_SIZE + DATA_FILE_INSERT_INDEX > BLOCK_INDEX;) {
 				if (BLOCK_INDEX > 0) { 
-					index_locations += std::to_string(BLOCK_INDEX - DATA_FILE_INSERT_INDEX) + ',';
+					index_locations += std::to_string(BLOCK_INDEX) + ',';
 					ImageVec[BLOCK_INDEX] = 'X';
 				} 
 				BLOCK_INDEX = search(ImageVec.begin() + BLOCK_INDEX + 1, ImageVec.end(), BLOCK_ID.begin(), BLOCK_ID.end()) - ImageVec.begin();
 			}
-			std::string repairCode = "$i=-1;$idx=@(" + index_locations + ");while(++$i -lt $idx.count){$br[$idx[$i]]=0x23};";
+			std::string repairCode = "$i=-1;$idx=@(" + index_locations + ");while(++$i -lt $idx.count){$bt[$idx[$i]]=0x23};";
 			repairCode.erase(remove(repairCode.end() - 51, repairCode.end(), ','), repairCode.end());
 			pwshRepairCodeLength += repairCode.length();
 			ImageVec.insert(ImageVec.begin() + pwshInsertIndex[0], repairCode.begin(), repairCode.end());
