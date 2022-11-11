@@ -30,7 +30,7 @@ $bt=[System.IO.File]::ReadAllBytes($env:pdvps_file);$bt[0]=0x0d;$bt[1]=0x3c;$bt[
 $bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;
 [System.IO.File]::WriteAllBytes("./pdvps_extracted/pdvps_tmp.ps1", $bt);
 Move-Item $env:pdvps_file -Destination pdvps_extracted -Force;
-Set-Location pdvps_extracted;./pdvps_tmp.ps1'|pwsh;read -p "Please hit Enter to continue...";clear;exit;
+Set-Location pdvps_extracted;./pdvps_tmp.ps1'|pwsh;read -p "Press Enter to Exit.";clear;exit;
 #&cls&powershell Clear-Host;New-Item pdvps_extracted -itemtype directory;
 $bt=[System.IO.File]::ReadAllBytes('%~dpnx0');$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x23;
 $bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;
@@ -85,24 +85,23 @@ powershell -executionpolicy bypass -file .\pdvps_tmp.ps1			# (7)
 
 Main PowerShell Script
 
-Found after the embedded user data file within the "hIST" Chunk, before the "IDAT" chunk.
+Found after the embedded, 'encrypted' (xor) user data file within the "hIST" Chunk, before the "IDAT" chunk.
 
 The PowerShell script will basically "cut" the user data file out of the PNG polyglot image
 and write it to disk as a new file, it will then attempt to open/play/run the file (depending on media type).
 
 Again, in a nutshell, the PowerShell script does the following (for both Linux and Windows).
 
-1. Make a copy of the "pdvps_tmp.ps1" file and write it to disk as "pdv_tmp_f2x83.tmp".
-2. Read in all bytes of the file "pdv_tmp_f2x83.tmp" into the $bt variable.
+1. Read in all the bytes from file "pdvps_tmp.ps1" and store in the $bt array
+2. Start "repair code" on bytes if required (see comments below on "repair code").
+
 3. Truncate/cut the top part of file from $bt until the start of user data file (see $tr value).
 4. Remove "pdvps_tmp.ps1" file.
 
 5. Create New-Object (file), read in $fl bytes, file length, size of user file.
 (see $fl value), from $bt, discard the rest.
-
-6. Start "repair code" on bytes if required (see comments below on "repair code").
+ 
 7. Write new file to disk within "pdvps_extracted" folder as "media_file.[extension]", e.g "media_file.mp4".
-8. Remove "pdv_tmp_f2x83.tmp" file.
 9. Attempt to open/play/run file, depending on its media type.
 
 hIST chunk
@@ -114,7 +113,7 @@ PDVPS
 #>
 Clear-Host;$os='Win';$tr=2043;$fl=;$ext='';$app=0;$m='media_file'+$ext;if($ext -eq '.py'){$app='python3 '};$wa='';$la='';if(Test-Path -Path '/usr/bin'){$os='Linux';if($ext -eq '.ps1'){$app='pwsh '}}else{if($ext -eq '.ps1'){$app='powershell '}};if($ext -eq '.ps1' -And $os -eq 'Win'){$m='.\'+$m};$ver=$PSVersionTable.PSVersion.Major;if($ver -lt 5){Write-Host "`r`nError: PowerShell Version 5 or later is required.";
 Start-Sleep -Seconds 6;exit};$pn=$MyInvocation.MyCommand.Definition;$n=$MyInvocation.MyCommand.Name;$bt=[System.IO.File]::ReadAllBytes($pn);
-Write-Host "Decrypting Media File...";$j=704;for($i=2043; $fl+2043 -gt $i;){$bt[$i]=$bt[$i] -bxor $bt[$j];$i++;$j--;if($j -lt 3) {$j=704}};
+Write-Host "Decrypting Media File...";$j=704;for($i=$tr; $fl+$tr -gt $i;){$bt[$i]=$bt[$i] -bxor $bt[$j];$i++;$j--;if($j -lt 3) {$j=704}};
 Clear-Host;$trunc=$bt[$tr..($fl+$tr-1)];Remove-Item $pn;$mp=$pn.Replace($n, $m);if(Test-Path -Path $mp){Remove-Item -Path $mp -Force;
 Start-Sleep -Seconds 1};if($ver -gt 5) {Set-Content -value $trunc -AsByteStream -path "$($mp)"}else{Set-Content -value $trunc -encoding byte -path "$($mp)"};
 if($os -eq 'Linux'){if($app){$app+$m,$la |sh}elseif($ext -eq '.exe'){chmod +x $m;iex ./$m$la}else{chmod -x $m;
@@ -125,25 +124,26 @@ ii $m}}else{if($app){&cmd /c $app$m$wa;Pause}elseif($ext -eq '.exe'){&cmd /c $m$
 
 Clear-Host;
 $os='Win';
-$tr=2043;	# Related to (3). $tr Truncate variable const value. Number of bytes to cut from the variable $bt,
-		# which will store the whole PNG file content. Once truncated, User file now 
-		# starts from the beginning of the $bt variable content.
 
-$fl=;		# Related to (5). $fl user file length variable value (bytes) updated by C++ program.
-		# Tells PowerShell how many bytes to read in from the start of $bt variable,
-		# which should be the entirety of the embedded user data file.
-		# Create a new file from these bytes, discard the rest of $bt content after this $fl value.
+$tr=2043;	# $tr TRuncate variable const value. 
+		# $bt array stores the whole PNG file, $tr sets the index location for the start of the embedded user media file in $bt. 
 
-$ext='';	# File extension variable, updated by C++ program, e.g. ($ext='.mp4').
+$fl=;		# $fl user File Length variable value (bytes) updated by C++ program.
+		# Tells PowerShell how many bytes to read from the start index ($tr) of the $bt array.
+		# This should be the entirety of the embedded user file, which is stored in $trunc 
+
+$ext='';	# User file extension variable, updated by C++ program, e.g. ($ext='.mp4').
+
 $app=0;
+
 $m='media_file'+$ext;
+
 if($ext -eq '.py')
 	{$app='python3 '};
 
-$wa='';		# $wa, Windows arguments, command-line arguments string variable, updated by C++ program
-$la='';    	# $la, Linux arguments, command-line arguments string variable, updated by C++ program.
-		# Only '.py', '.ps1' and '.exe' files get the option of adding
-		# command-line arguments for their embedded files.
+$wa='';		# $wa, Windows Arguments, command-line arguments string variable, updated by C++ program
+$la='';    	# $la, Linux Arguments, command-line arguments string variable, updated by C++ program.
+		# Only '.py', '.ps1' and '.exe' files get the option of adding command-line arguments for their embedded files.
 
 if(Test-Path -Path '/usr/bin')
 	{$os='Linux';
@@ -162,9 +162,9 @@ if($ver -lt 5)
 $pn=$MyInvocation.MyCommand.Definition;
 $n=$MyInvocation.MyCommand.Name;
 
-$bt=[System.IO.File]::ReadAllBytes($pn);	# (2)
+$bt=[System.IO.File]::ReadAllBytes($pn);	# (1)
 
-<Repair code inserted here, if required>	# (6)
+<Repair code inserted here, if required>	# (2)
 
 # If required, PowerShell 'repair code' for the user data file gets inserted here, 
 # by the C++ program. The user data file CANNOT contain any occurrence of the PowerShell
@@ -198,7 +198,7 @@ Write-Host "Decrypting Media File...";
 
 $j = 704;
 
-for($i = 2043; $fl + 2043 -gt $i;){
+for($i = $tr; $fl + $tr -gt $i;){
 	$bt[$i] = $bt[$i] -bxor $bt[$j];
 	$i++;
 	$j--;
@@ -208,8 +208,8 @@ for($i = 2043; $fl + 2043 -gt $i;){
 	
 Clear-Host
 
-$trunc=$bt[$tr..($fl+$tr-1)];
-
+$trunc=$bt[$tr..($fl + $tr -1)];  	# $Trunc now contains the user media file. 
+					# $bt array contains whole PNG file, $tr start index of embedded user file, $fl length of user file
 Remove-Item $pn;
 
 $mp=$pn.Replace($n, $m);
