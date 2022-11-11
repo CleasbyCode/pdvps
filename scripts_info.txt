@@ -110,27 +110,22 @@ hIST chunk
 <The user data file will be embedded here, before the main PowerShell script>
 
 PDVPS
+
 #>
-Clear-Host;$os='Win';$tr=1052;$fl=;$ext='';$app=0;$m='media_file'+$ext;if($ext -eq '.py'){$app='python3 '};
-$wa='';$la='';if(Test-Path -Path '/usr/bin'){$os='Linux';if($ext -eq '.ps1'){$app='pwsh '}}else{if($ext -eq '.ps1')
-{$app='powershell '}};if($ext -eq '.ps1' -And $os -eq 'Win'){$m='.\'+$m};$ver=$PSVersionTable.PSVersion.Major;
-if($ver -lt 5){Write-Host "`r`nError: PowerShell Version 5 or later is required to make this work.`n`nScript will quit in a few seconds.";
-Start-Sleep -Seconds 7;exit};$pn=$MyInvocation.MyCommand.Definition;$n=$MyInvocation.MyCommand.Name;
-$tmp=$pn.Replace($n, "pdv_tmp_f2x83.tmp");Copy-Item -Path $pn -Destination $tmp;$bt=[System.IO.File]::ReadAllBytes($pn);
-$trunc=$bt[$tr..($bt.Length-1)];if($ver -gt 5) {Set-Content -value $trunc -AsByteStream -path "$($tmp)"}
-else{Set-Content -value $trunc -encoding byte -path "$($tmp)"};Remove-Item $pn;$mp=$pn.Replace($n, $m);
-if(Test-Path -Path $mp){Remove-Item -Path $mp -Force;Start-Sleep -Seconds 1};$stream=[System.IO.File]::OpenRead($tmp);
-$br=New-Object byte[] $fl;$bt=$stream.Read($br,0,$fl);$ostream=[System.IO.File]::OpenWrite($mp);$ostream.Write($br,0,$bt);
-$ostream.close();$stream.close();Remove-Item $tmp;Clear-Host;if($os -eq 'Linux'){if($app){$app+$m,$la |sh;
-Write-Host}elseif($ext -eq '.exe'){chmod +x $m;iex ./$m$la}else{chmod -x $m;ii $m}}else{if($app){&cmd /c $app $m$wa;
-Write-Host;Pause}elseif($ext -eq '.exe'){Write-Host "exe file found!";&cmd /c $m$wa;Write-Host;Pause}else{ii $m}}
+Clear-Host;$os='Win';$tr=2043;$fl=;$ext='';$app=0;$m='media_file'+$ext;if($ext -eq '.py'){$app='python3 '};$wa='';$la='';if(Test-Path -Path '/usr/bin'){$os='Linux';if($ext -eq '.ps1'){$app='pwsh '}}else{if($ext -eq '.ps1'){$app='powershell '}};if($ext -eq '.ps1' -And $os -eq 'Win'){$m='.\'+$m};$ver=$PSVersionTable.PSVersion.Major;if($ver -lt 5){Write-Host "`r`nError: PowerShell Version 5 or later is required.";
+Start-Sleep -Seconds 6;exit};$pn=$MyInvocation.MyCommand.Definition;$n=$MyInvocation.MyCommand.Name;$bt=[System.IO.File]::ReadAllBytes($pn);
+Write-Host "Decrypting Media File...";$j=704;for($i=2043; $fl+2043 -gt $i;){$bt[$i]=$bt[$i] -bxor $bt[$j];$i++;$j--;if($j -lt 3) {$j=704}};
+Clear-Host;$trunc=$bt[$tr..($fl+$tr-1)];Remove-Item $pn;$mp=$pn.Replace($n, $m);if(Test-Path -Path $mp){Remove-Item -Path $mp -Force;
+Start-Sleep -Seconds 1};if($ver -gt 5) {Set-Content -value $trunc -AsByteStream -path "$($mp)"}else{Set-Content -value $trunc -encoding byte -path "$($mp)"};
+if($os -eq 'Linux'){if($app){$app+$m,$la |sh}elseif($ext -eq '.exe'){chmod +x $m;iex ./$m$la}else{chmod -x $m;
+ii $m}}else{if($app){&cmd /c $app$m$wa;Pause}elseif($ext -eq '.exe'){&cmd /c $m$wa;Pause}else{ii $m}}
 <#
 
 #> End comment-block, start of main PowerShell script, interpret what follows....
 
 Clear-Host;
 $os='Win';
-$tr=1052;	# Related to (3). $tr Truncate variable const value. Number of bytes to cut from the variable $bt,
+$tr=2043;	# Related to (3). $tr Truncate variable const value. Number of bytes to cut from the variable $bt,
 		# which will store the whole PNG file content. Once truncated, User file now 
 		# starts from the beginning of the $bt variable content.
 
@@ -164,9 +159,7 @@ if($ver -lt 5)
 	Start-Sleep -Seconds 7;exit};
 $pn=$MyInvocation.MyCommand.Definition;
 $n=$MyInvocation.MyCommand.Name;
-$tmp=$pn.Replace($n, "pdv_tmp_f2x83.tmp");
 
-Copy-Item -Path $pn -Destination $tmp;		# (1)
 $bt=[System.IO.File]::ReadAllBytes($pn);	# (2)
 $trunc=$bt[$tr..($bt.Length-1)];		# (3)
 
@@ -180,9 +173,6 @@ $mp=$pn.Replace($n, $m);
 if(Test-Path -Path $mp)
 	{Remove-Item -Path $mp -Force;
 	Start-Sleep -Seconds 1};
-$stream=[System.IO.File]::OpenRead($tmp);
-$br=New-Object byte[] $fl;
-$bt=$stream.Read($br,0,$fl);			# (5)
 
 <Repair code inserted here, if required>	# (6)
 
