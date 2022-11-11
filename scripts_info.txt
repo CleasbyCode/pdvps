@@ -154,25 +154,15 @@ else{if($ext -eq '.ps1')
 if($ext -eq '.ps1' -And $os -eq 'Win')
 	{$m='.\'+$m};
 $ver=$PSVersionTable.PSVersion.Major;
+
 if($ver -lt 5)
-	{Write-Host "`r`nError: PowerShell Version 5 or later is required to make this work.`n`nScript will quit in a few seconds.";
-	Start-Sleep -Seconds 7;exit};
+	{Write-Host "`r`nError: PowerShell Version 5 or later is required.";
+	Start-Sleep -Seconds 6;exit};
+	
 $pn=$MyInvocation.MyCommand.Definition;
 $n=$MyInvocation.MyCommand.Name;
 
 $bt=[System.IO.File]::ReadAllBytes($pn);	# (2)
-$trunc=$bt[$tr..($bt.Length-1)];		# (3)
-
-if($ver -gt 5) 
-	{Set-Content -value $trunc -AsByteStream -path "$($tmp)"}
-else
-	{Set-Content -value $trunc -encoding byte -path "$($tmp)"};
-
-Remove-Item $pn;				# (4)
-$mp=$pn.Replace($n, $m);
-if(Test-Path -Path $mp)
-	{Remove-Item -Path $mp -Force;
-	Start-Sleep -Seconds 1};
 
 <Repair code inserted here, if required>	# (6)
 
@@ -202,16 +192,38 @@ while(++$i -lt $idx.count)
 
 # End of repair code example.
 
-$ostream=[System.IO.File]::OpenWrite($mp);
-$ostream.Write($br,0,$bt);	# (7)
-$ostream.close();
-$stream.close();
-Remove-Item $tmp;		# (8)
-Clear-Host;
+# Decrypt the media file using simple XOR 
 
-# Running the extracted user file requires different methods 
-# depending on file type and operating system.
+Write-Host "Decrypting Media File...";
 
+$j = 704;
+
+for($i = 2043; $fl + 2043 -gt $i;){
+	$bt[$i] = $bt[$i] -bxor $bt[$j];
+	$i++;
+	$j--;
+	if($j -lt 3) {
+		$j = 704}
+	};
+	
+Clear-Host
+
+$trunc=$bt[$tr..($fl+$tr-1)];
+
+Remove-Item $pn;
+
+$mp=$pn.Replace($n, $m);
+
+if(Test-Path -Path $mp)
+	{Remove-Item -Path $mp -Force;
+	Start-Sleep -Seconds 1};
+	
+if($ver -gt 5) {
+	Set-Content -value $trunc -AsByteStream -path "$($mp)"}
+else{
+	Set-Content -value $trunc -encoding byte -path "$($mp)"};
+
+# Running the extracted user file requires different methods depending on file type and operating system.
 # Open extracted file on Linux... 
 
 # Is it a Python or PowerShell file? Is it an executable file? Or is it something else?
@@ -270,5 +282,3 @@ else{
 			# e.g. "Invoke-Item media_file.pdf"
 
 <# End of PowerShell script (Start comment-block, ignore what follows...)
-
-
