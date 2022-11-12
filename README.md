@@ -75,9 +75,9 @@ Image is embedded with an MP4 video file. Click the image to fully expand it, th
 
 **Video Example**
 
-[YouTube](https://www.youtube.com/watch_popup?v=d7QjxLWQ0kM)
+[YouTube](https://www.youtube.com/watch_popup?v=FCleYo9vJas)
 
-Linux demo of *pdvps* embedding a PDF document within the PNG Image, then running the image file to extract and display the PDF document. Followed by tweeting the PNG image and saving it to a Windows machine, where we run it again to extract and display the PDF document on Windows.
+Running encrypted PNG image on Linux. PowerShell script will decrypt, extract and play the embedded mp4 video file.
 
 ##
 
