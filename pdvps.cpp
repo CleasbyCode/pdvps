@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
 			return -1;
 		}
 		
-		// Default Image with embedded scripts has an 8K overhead - 5MB (Twitter PNG size limit) = 5,234,608 bytes available for arbiraty data.
+		// Default image with embedded scripts has an 8K overhead - 5MB (Twitter PNG size limit) = 5,234,608 bytes available for arbiraty data.
 		const int MAX_FILE_SIZE_BYTES = 5234608;
 
 		// Get and check user filesize. Display error and quit program if file size exceeds max size.
@@ -103,8 +103,8 @@ int main(int argc, char** argv) {
 			j--; j = j == 2 ? 704 : j; // Decrement j, reset j back to 704 once its below 3.
 		}
 
-		// The user data file CANNOT contain any occurrence of the PowerShell end-comment-block string '#>'.This will cause the embedded PowerShell script
-		// to fail if it encounters that string anywhere in the user file. 
+		// The user data file CANNOT contain any occurrence of the PowerShell end-comment-block string '#>'.
+		// This will cause the embedded PowerShell script to fail if it encounters that string anywhere in the user file. 
 		
 		// The C++ program will check the file and if found, modify a byte for every occurrence of this string.
 		// It will store index locations of each modified byte in a larger string containing PowerShell code, which will put back the 
