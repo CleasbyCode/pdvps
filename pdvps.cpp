@@ -49,11 +49,11 @@ int main(int argc, char** argv) {
 							// Contents will be inserted into '$ext' (extension) variable for the embedded PS script.
 									
 		// int array contains index locations for inserting data items into the embedded PowerShell (PS) script, within the PNG image.
-		// [0] value is the insert index location for the PS 'repair code' strings (see below).
-		// [1] value is the insert index location for the PS '$la' Linux Arguments string variable.
-		// [2] value is the insert index location for the PS '$wa' Windows Arguments string variable.
-		// [3] value is the insert index location for the PS '$ext' File Extension of user data file, string variable.
-		// [4] value is the insert index location for the PS '$fl', File Length value of user data file, variable.
+		// [0] = insert index location for the PS 'repair code' strings (see below).
+		// [1] = insert index location for the PS '$la' Linux Arguments string variable.
+		// [2] = insert index location for the PS '$wa' Windows Arguments string variable.
+		// [3] = insert index location for the PS '$ext' File Extension of user data file, string variable.
+		// [4] = insert index location for the PS '$fl', File Length value of user data file, variable.
 		// For more information about the PowerShell script, see the "scripts_info.txt" file that's part of this repo on GitHub. 
 		int pwshInsertIndex[5] = { DATA_SIZE + 2608, DATA_SIZE + 2173, DATA_SIZE + 2166, DATA_SIZE + 2095, DATA_SIZE + 2088 }, 
 
