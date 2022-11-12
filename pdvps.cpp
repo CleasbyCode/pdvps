@@ -127,7 +127,7 @@ int main(int argc, char** argv) {
 			
 			// String contains PS 'repair code' to be inserted into embedded PS script within the PNG image.
 			// PS array '$idx=@("<index_locations>")' will contain index location values for each byte we need to change back to original '#' character.
-			// Index locations values are created by the this C++ program, see 'for loop' above.
+			// Index location values are created by the this C++ program, see 'for loop' above.
 			// PowerShell 'while loop', changes the modified byte back to original '#' character, for each index location.
 			std::string repairCode = "$i=-1;$idx=@(" + index_locations + ");while(++$i -lt $idx.count){$bt[$idx[$i]]=0x23};";
 
