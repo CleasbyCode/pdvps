@@ -1,5 +1,5 @@
 
-The PNG image file is the barebones image (5.72kb) that contains the Linux shell / Windows batch and PowerShell scripts. 
+The PNG image file is the barebones image (6.55kb) that contains the Linux shell / Windows batch and PowerShell scripts. 
 (see scripts_info.txt, in the main folder for more information on these embedded scripts).
 
 The C++ program uses this image (Image_with_Scripts_Vec.hpp) to update the relevant parts of the main PowerShell script that's
