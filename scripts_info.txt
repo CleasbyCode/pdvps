@@ -26,7 +26,7 @@ strings to the beginning '<#' and end '#>' of the PNG file.
 
 bKGD chunk
 
-REM;clear;export pdvps_file="$0";echo 'Clear-Host;$ErrorActionPreference='SilentlyContinue';New-Item pdvps_extracted -itemtype directory;
+REM;clear;export pdvps_file="$0";echo 'Clear-Host;$ErrorActionPreference="SilentlyContinue";New-Item pdvps_extracted -itemtype directory;
 $bt=[System.IO.File]::ReadAllBytes($env:pdvps_file);$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x23;
 $bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;
 [System.IO.File]::WriteAllBytes("./pdvps_extracted/pdvps_tmp.ps1", $bt);
@@ -48,7 +48,7 @@ export pdvps_file="$0";
 # This long echo command contains a number of Powershell commands which it |pipes to the Linux pwsh (PowerShell) program.
 
 echo 'Clear-Host;
-	$ErrorActionPreference='SilentlyContinue';
+	$ErrorActionPreference="SilentlyContinue";
 	New-Item pdvps_extracted -itemtype directory;		# (1)
 	$bt=[System.IO.File]::ReadAllBytes($env:pdvps_file);	# (2)
 	$bt[0]=0x0d;						# (3)
