@@ -26,13 +26,13 @@ strings to the beginning '<#' and end '#>' of the PNG file.
 
 bKGD chunk
 
-REM;clear;export pdvps_file="$0";echo 'Clear-Host;New-Item pdvps_extracted -itemtype directory;
+REM;clear;export pdvps_file="$0";echo 'Clear-Host;$ErrorActionPreference='SilentlyContinue';New-Item pdvps_extracted -itemtype directory;
 $bt=[System.IO.File]::ReadAllBytes($env:pdvps_file);$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x23;
 $bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;
 [System.IO.File]::WriteAllBytes("./pdvps_extracted/pdvps_tmp.ps1", $bt);
 Move-Item $env:pdvps_file -Destination pdvps_extracted -Force;
 Set-Location pdvps_extracted;./pdvps_tmp.ps1'|pwsh;read -p "Press Enter to Exit.";clear;exit;
-#&cls&powershell Clear-Host;New-Item pdvps_extracted -itemtype directory;
+#&cls&powershell Clear-Host;$ErrorActionPreference='SilentlyContinue';New-Item pdvps_extracted -itemtype directory;
 $bt=[System.IO.File]::ReadAllBytes('%~dpnx0');$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x23;
 $bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;
 [System.IO.File]::WriteAllBytes('.\pdvps_extracted\pdvps_tmp.ps1', $bt);
@@ -48,6 +48,7 @@ export pdvps_file="$0";
 # This long echo command contains a number of Powershell commands which it |pipes to the Linux pwsh (PowerShell) program.
 
 echo 'Clear-Host;
+	$ErrorActionPreference='SilentlyContinue';
 	New-Item pdvps_extracted -itemtype directory;		# (1)
 	$bt=[System.IO.File]::ReadAllBytes($env:pdvps_file);	# (2)
 	$bt[0]=0x0d;						# (3)
@@ -69,6 +70,7 @@ B. Windows Part
 
 #&cls
 &powershell Clear-Host;
+$ErrorActionPreference='SilentlyContinue';
 New-Item pdvps_extracted -itemtype directory;  	# (1)
 $bt=[System.IO.File]::ReadAllBytes('%~dpnx0'); 	# (2)
 $bt[0]=0x0d;					# (3)
@@ -108,7 +110,7 @@ hIST chunk
 PDVPS
 
 #>
-Clear-Host;$os='Win';$tr=2043;$fl=;$ext='';$app=0;$m='media_file'+$ext;if($ext -eq '.py'){$app='python3 '};
+Clear-Host;$os='Win';$tr=2043;$fl=;$ext='';$app=0;$m='media_file_'+(get-date).ToString('hhmmssf')+$ext;if($ext -eq '.py'){$app='python3 '};
 $wa='';$la='';if(Test-Path -Path '/usr/bin'){$os='Linux';if($ext -eq '.ps1'){$app='pwsh '}}else{if($ext -eq '.ps1'){$app='powershell '}};
 if($ext -eq '.ps1' -And $os -eq 'Win'){$m='.\'+$m};$ver=$PSVersionTable.PSVersion.Major;
 if($ver -lt 5){Write-Host "`r`nError: PowerShell Version 5 or later is required.";
@@ -137,7 +139,7 @@ $ext='';	# User file extension variable, updated by C++ program, e.g. ($ext='.mp
 
 $app=0;
 
-$m='media_file'+$ext;
+$m='media_file_'+(get-date).ToString('hhmmssf')+$ext;	# Give extracted media a unique file name, e.g. 'media_file_0659538.mp4'
 
 if($ext -eq '.py')
 	{$app='python3 '};
