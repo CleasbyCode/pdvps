@@ -110,7 +110,7 @@ hIST chunk
 PDVPS
 
 #>
-Clear-Host;$os='Win';$tr=2043;$fl=;$ext='';$app=0;$m='media_file_'+(get-date).ToString('hhmmssf')+$ext;if($ext -eq '.py'){$app='python3 '};
+Clear-Host;$os='Win';$tr=2127;$fl=;$ext='';$app=0;$m='media_file_'+(get-date).ToString('hhmmssf')+$ext;if($ext -eq '.py'){$app='python3 '};
 $wa='';$la='';if(Test-Path -Path '/usr/bin'){$os='Linux';if($ext -eq '.ps1'){$app='pwsh '}}else{if($ext -eq '.ps1'){$app='powershell '}};
 if($ext -eq '.ps1' -And $os -eq 'Win'){$m='.\'+$m};$ver=$PSVersionTable.PSVersion.Major;
 if($ver -lt 5){Write-Host "`r`nError: PowerShell Version 5 or later is required.";
@@ -128,7 +128,7 @@ else{chmod -x $m; ii $m}}else{if($app){&cmd /c $app$m$wa;Pause}elseif($ext -eq '
 Clear-Host;
 $os='Win';
 
-$tr=2043;	# $tr TRuncate variable const int value. 
+$tr=2127;	# $tr TRuncate variable const int value. 
 		# $bt array stores the whole PNG file, $tr sets the index location for the start of the embedded user media file in $bt. 
 
 $fl=;		# $fl user File Length int variable value (bytes) updated by C++ program.
