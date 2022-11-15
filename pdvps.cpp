@@ -1,11 +1,14 @@
 // PNG Data Vehicle for Twitter, PowerShell Edition (PDVPS) v1.0.Created by Nicholas Cleasby (@CleasbyCode) 1/11/2022.
 
 #include <fstream>
+#include <chrono>
 #include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
 #include "Image_with_Scripts_Vec.hpp"
+
+using namespace std::chrono;
 
 int main(int argc, char** argv) {
 	if (argc == 2 && std::string(argv[1]) == "--info") {
@@ -28,6 +31,13 @@ int main(int argc, char** argv) {
 
 		// Default image with embedded scripts has an 9K overhead - 5MB (Twitter PNG size limit) = 5,233,664 bytes available for arbiraty data.
 		const int MAX_FILE_SIZE_BYTES = 5233664;
+
+		// Create a unique string from Time. This 5 byte string will be embedded within the image file.
+		// The string will be used as part of the XOR process to 'encrypt/decrypt' the media file.
+		ptrdiff_t ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+		std::string tmpNum = std::to_string(ms);
+		tmpNum = std::string(tmpNum.rbegin(), tmpNum.rend());
+		std::string xorNum = tmpNum.substr(0, 5);
 
 		// Get and check user filesize. Display error and quit program if file size exceeds max size.
 		readData.seekg(0, readData.end);
@@ -56,12 +66,12 @@ int main(int argc, char** argv) {
 		// [3] value is the insert index location for the PS '$ext' File Extension of user data file, string variable.
 		// [4] value is the insert index location for the PS '$fl', File Length value of user data file, variable.
 		// For more information about the PowerShell script, see the "scripts_info.txt" file that's part of this repo on GitHub. 
-		int pwshInsertIndex[5] = { DATA_SIZE + 2724, DATA_SIZE + 2289, DATA_SIZE + 2282, DATA_SIZE + 2179, DATA_SIZE + 2172 },
+		int pwshInsertIndex[5] = { DATA_SIZE + 2753, DATA_SIZE + 2318, DATA_SIZE + 2311, DATA_SIZE + 2208, DATA_SIZE + 2201 },
 
 			nameLength = DATA_FILE.length(),
 			dot = DATA_FILE.find_last_of('.'),
-			histChunkLengthInsertIndex = 2119,	// Index location for hIST chunk length field. Use this location value when we insert chunk length.
-			histChunkLength = 1236,			// Initial hIST chunk size. This will grow as additional data items are inserted into the PS script.
+			histChunkLengthInsertIndex = 2148,	// Index location for hIST chunk length field. Use this location value when we insert chunk length.
+			histChunkLength = 1345,			// Initial hIST chunk size. This will grow as additional data items are inserted into the PS script.
 			bits = 24;
 
 		// If user file does not have an extension, assume its an executable file, ext will be '.exe'.
@@ -87,21 +97,35 @@ int main(int argc, char** argv) {
 				return -1;
 			}
 		}
-		const int DATA_FILE_INSERT_INDEX = 2127; // Index location of where user data file is inserted into the default PNG image file.
 
-		// Read in user data file into above index location of default PNG image and 'encrypt' file using simple XOR method. 
+		int i = 0, 
+			pdvpsXorInsertIndex = 2157;		// Index insert location of 5 byte Time string of xorNum
+
+		// Insert Time string xorNum into image file.
+		while (pdvpsXorInsertIndex != 2162) ImageVec.at(pdvpsXorInsertIndex++) = xorNum[i++];
+
 		char byte;
-		int j = 704;	// Set variable j to the 704th index location of the default PNG file.
+
+		int j = 704,		// Set var j to 704th index location of default image file.
+			k = 3,		// Set var k to 3rd index location of default image file
+			x = 2158;	// Set var x to the 2158th index location of default image file
+					// This is the start location of the Time xorNum string.
 
 		std::ifstream readFile(DATA_FILE, std::ios::binary);
 
+		// Index location of where user data file is inserted into the default image file.
+		const int DATA_FILE_INSERT_INDEX = 2156; 
+
+		// Read in user data file into above index location of default PNG image and 'encrypt' file using simple XOR method. 
 		for (int i = 0; DATA_SIZE > i; i++) {
 			// Read in byte of user data file, 
-			// XOR the byte against the character at index location j, insert the converted byte into PNG file index location.
-			// Repeated until end of user data file.
+			// XOR the byte against the character at index location j, index location k, index location x;
+			// Insert the converted byte into PNG file index location. Repeated until end of user data file.
 			byte = readFile.get();
-			ImageVec.insert((ImageVec.begin() + DATA_FILE_INSERT_INDEX) + i, byte ^ ImageVec[j]);
-			j--; j = j == 2 ? 704 : j; // Decrement j, reset j back to 704 once its below 3.
+			ImageVec.insert((ImageVec.begin() + DATA_FILE_INSERT_INDEX) + i, byte ^ ImageVec[j] ^ ImageVec[k] ^ ImageVec[x+i]);
+			j--; j = j == 2 ? 704 : j;
+			k++; k = k == 705 ? 3 : k; 
+			x++; x = x == 2163 ? 2157 : x; // Repeat through each byte of the Time xorNum string.
 		}
 
 		// The user data file CANNOT contain any occurrence of the PowerShell end-comment-block string '#>'.
