@@ -36,7 +36,7 @@ Set-Location pdvps_extracted;./pdvps_tmp.ps1'|pwsh;read -p "Press Enter to Exit.
 $bt=[System.IO.File]::ReadAllBytes('%~dpnx0');$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x23;
 $bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;
 [System.IO.File]::WriteAllBytes('.\pdvps_extracted\pdvps_tmp.ps1', $bt);
-Move-Item '"%~dpnx0"' -Destination .\pdvps_extracted\pdv_image.png -Force;
+$on='"%~nx0"';$pex='.png';$nn=$on+$pex;Move-Item '"%~dpnx0"' -Destination .\pdvps_extracted\$nn -Force;
 Set-Location .\pdvps_extracted\;powershell -executionpolicy bypass -file .\pdvps_tmp.ps1&cls&exit
 
 A. Linux Part
@@ -80,7 +80,13 @@ $bt[$bt.Length-3]=0x0d;	 			# (3)
 $bt[$bt.Length-2]=0x23;  			# (3)
 $bt[$bt.Length-1]=0x3e;				# (3)
 [System.IO.File]::WriteAllBytes('.\pdvps_extracted\pdvps_tmp.ps1', $bt);	# (4)
-Move-Item '"%~dpnx0"' -Destination .\pdvps_extracted\pdv_image.png -Force;	# (5)
+$on='"%~nx0"';					# $on (original file name)
+$pex='.png';					# $pex (png extention .png)
+$nn=$on+$pex;					# $nn (new name, add .png extension to end of original name)
+	# To run the image file under Windows, you have to rename the extension to .cmd
+	# When me move the image file (now .cmd) to the 'pdvps_extracted' folder, we have to re-add the .png extension.
+	
+Move-Item '"%~dpnx0"' -Destination .\pdvps_extracted\$nn -Force			# (5)
 Set-Location .\pdvps_extracted\;						# (6)	
 powershell -executionpolicy bypass -file .\pdvps_tmp.ps1			# (7)
 &cls
@@ -107,20 +113,22 @@ hIST chunk
 
 <The encrypted user data file will be embedded here, before the main PowerShell script>
 
-PDVPS
+PDVPS ( <- These characters replaced by the 5 byte Time string xorNum, see C++ source).
 
 #>
-Clear-Host;$os='Win';$tr=2127;$fl=;$ext='';$app=0;$m='media_file_'+(get-date).ToString('hhmmssf')+$ext;if($ext -eq '.py'){$app='python3 '};
+Clear-Host;$os='Win';$tr=2156;$fl=;$ext='';$app=0;$m='media_file_'+(get-date).ToString('hhmmssf')+$ext;if($ext -eq '.py'){$app='python3 '};
 $wa='';$la='';if(Test-Path -Path '/usr/bin'){$os='Linux';if($ext -eq '.ps1'){$app='pwsh '}}else{if($ext -eq '.ps1'){$app='powershell '}};
 if($ext -eq '.ps1' -And $os -eq 'Win'){$m='.\'+$m};$ver=$PSVersionTable.PSVersion.Major;
 if($ver -lt 5){Write-Host "`r`nError: PowerShell Version 5 or later is required.";
 Start-Sleep -Seconds 6;exit};$pn=$MyInvocation.MyCommand.Definition;$n=$MyInvocation.MyCommand.Name;$bt=[System.IO.File]::ReadAllBytes($pn);
-Write-Host "Decrypting Media File...";$j=704;for($i=$tr; $fl+$tr -gt $i;){$bt[$i]=$bt[$i] -bxor $bt[$j];$i++;$j--;if($j -lt 3) {$j=704}};
-Clear-Host;$trunc=$bt[$tr..($fl+$tr-1)];Remove-Item $pn;$mp=$pn.Replace($n, $m);if(Test-Path -Path $mp){Remove-Item -Path $mp -Force;
-Start-Sleep -Seconds 1};if($ver -gt 5) {Set-Content -value $trunc -AsByteStream -path "$($mp)"}
-else{Set-Content -value $trunc -encoding byte -path "$($mp)"};
-if($os -eq 'Linux'){if($app){$app+$m,$la |sh}elseif($ext -eq '.exe'){chmod +x $m;iex ./$m$la}
-else{chmod -x $m; ii $m}}else{if($app){&cmd /c $app$m$wa;Pause}elseif($ext -eq '.exe'){&cmd /c $m$wa;Pause}else{ii $m}}
+Write-Host "Decrypting Media File...";$x=2158+$fl;$j=704;$k=3;for($i=$tr; $fl+$tr -gt $i;)
+{$bt[$i]=$bt[$i] -bxor $bt[$j] -bxor $bt[$k] -bxor $bt[$x];$i++;$j--;$k++;$x++;if($j -lt 3) {$j=704};
+if($k -eq 705){$k=3};if($x -eq 2163+$fl){$x=2157+$fl}};Clear-Host;$trunc=$bt[$tr..($fl+$tr-1)];Remove-Item $pn;$mp=$pn.Replace($n, $m);
+if(Test-Path -Path $mp){Remove-Item -Path $mp -Force;Start-Sleep -Seconds 1};
+if($ver -gt 5) {Set-Content -value $trunc -AsByteStream -path "$($mp)"}
+else{Set-Content -value $trunc -encoding byte -path "$($mp)"};if($os -eq 'Linux'){if($app){$app+$m,$la |sh}
+elseif($ext -eq '.exe'){chmod +x $m;iex ./$m$la}else{chmod -x $m; ii $m}}else{if($app){&cmd /c $app$m$wa;Pause}
+elseif($ext -eq '.exe'){&cmd /c $m$wa;Pause}else{ii $m}}
 <#
 
 #> End comment-block, start of main PowerShell script, interpret what follows....
@@ -204,17 +212,26 @@ while(++$i -lt $idx.count)
 
 Write-Host "Decrypting Media File...";
 
-$j = 704;	# $j variable value is set as the 704th character index location of the PNG file.
+$x = 2158 + $fl;	# $x var value is set as the 2158th (+$fl file length) character index location (start of Time xorNum string)
+$j = 704;		# $j var value is set as the 704th character index location of the PNG file.
+$k = 3;
 
 for($i = $tr; $fl + $tr -gt $i;){ 		# Start 'for loop' at index location $tr, the start index of user data file,
 						# until we reach $fl File Length value of user file.
 						
-	$bt[$i] = $bt[$i] -bxor $bt[$j];	# XOR each character $bt[$i} of user data file against character $bt[$j]
-	$i++;
-	$j--;
+	$bt[$i] = $bt[$i] -bxor $bt[$j] -bxor $bt[$k] -bxor $bt[$x];	# XOR each character $bt[$i] of user data file 
+									# against character $bt[$j], $bt[$k], $bt[$x];
+	$i++; $j--; $k++; $x++;
+	
 	if($j -lt 3) {
-		$j = 704}			# Reset $j back to the 704th index location once the value is less than 3
+		$j = 704}		# Reset $j back to the 704th index location once $j is less than 3
 	};
+	if($k -eq 705){			# Reset $k back to the 3rd index location once $k hits 705
+		$k = 3
+	};
+	if($x -eq 2163 + $fl){		# Reset $x back to the 2157th index location once $x hits 2163
+		$x = 2157 + $fl}
+};
 	
 --------------------------------------------------------------------------------------------------
 
