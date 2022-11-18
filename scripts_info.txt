@@ -37,7 +37,8 @@ $bt=[System.IO.File]::ReadAllBytes('%~dpnx0');$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x2
 $bt[$bt.Length-3]=0x0d;$bt[$bt.Length-2]=0x23;$bt[$bt.Length-1]=0x3e;
 [System.IO.File]::WriteAllBytes('.\pdvps_extracted\pdvps_tmp.ps1', $bt);
 $on='"%~nx0"';$pex='.png';$nn=$on+$pex;Move-Item '"%~dpnx0"' -Destination .\pdvps_extracted\$nn -Force;
-Set-Location .\pdvps_extracted\;powershell -executionpolicy bypass -file .\pdvps_tmp.ps1&cls&exit
+Set-Location .\pdvps_extracted\;if(Test-Path -Path '"C:\Program Files\PowerShell'")
+{pwsh -executionpolicy bypass -file .\pdvps_tmp.ps1}else{powershell -executionpolicy bypass -file .\pdvps_tmp.ps1}&cls&exit
 
 A. Linux Part
 
@@ -87,23 +88,27 @@ $nn=$on+$pex;					# $nn (new name, add .png extension to end of original name)
 	# When me move the image file (now .cmd) to the 'pdvps_extracted' folder, we have to re-add the .png extension.
 	
 Move-Item '"%~dpnx0"' -Destination .\pdvps_extracted\$nn -Force			# (5)
-Set-Location .\pdvps_extracted\;						# (6)	
-powershell -executionpolicy bypass -file .\pdvps_tmp.ps1			# (7)
+Set-Location .\pdvps_extracted\;						# (6)
+
+if(Test-Path -Path '"C:\Program Files\PowerShell'")				# What version of PowerShell? 
+	{pwsh -executionpolicy bypass -file .\pdvps_tmp.ps1}			# (7) "pwsh.exe" is Windows PowerShell 6 and later. (Version 7+ is recommended).
+else
+	{powershell -executionpolicy bypass -file .\pdvps_tmp.ps1}		# (7) "powershell.exe" is any Windows PowerShell version below version 6.
 &cls
 &exit
 
 Main PowerShell Script
 
-Found after the embedded, 'encrypted' (xor) user data file within the "hIST" Chunk, before the real "IDAT" chunk.
+Found after the embedded, 'encrypted' (-bxor method) user data file within the "hIST" Chunk and before the real "IDAT" chunk.
 
-The PowerShell script will basically "cut" the user data file out of the PNG polyglot image
-and write it to disk as a new file, it will then attempt to open/play/run the file, depending on media type.
+The PowerShell script will extract the user data file out of the PNG polyglot image and write it to disk as a new file, 
+it will then attempt to open/play/run the file, depending on media type.
 
 Again, in a nutshell, the PowerShell script does the following (for both Linux and Windows).
 
 1. Read in all the bytes from file "pdvps_tmp.ps1" and store in the $bt array
 2. Start "repair code" on bytes if required (see comments below on "repair code").
-3. Decrypt embedded user data file. (Simple XOR).
+3. Decrypt embedded user data file. (Simple -bxor method).
 4. Store user file in $trunc, taken from $bt array, using $tr and $fl variables.
 5. Remove "pdvps_tmp.ps1" file.
 6. Write the contents of $trunc (user media file) to disk, in 'pdvps_extracted' folder. 
@@ -113,15 +118,17 @@ hIST chunk
 
 <The encrypted user data file will be embedded here, before the main PowerShell script>
 
-PDVPS ( <- These characters replaced by the 5 byte Time string xorNum, see C++ source).
+PDVPS ( <- These characters are replaced by the 5 byte xorNum time string, see C++ source).
 
 #>
-Clear-Host;$os='Win';$tr=2156;$fl=;$ext='';$app=0;$m='media_file_'+(get-date).ToString('hhmmssf')+$ext;if($ext -eq '.py'){$app='python3 '};
-$wa='';$la='';if(Test-Path -Path '/usr/bin'){$os='Linux';if($ext -eq '.ps1'){$app='pwsh '}}else{if($ext -eq '.ps1'){$app='powershell '}};
+Clear-Host;$os='Win';$tr=2265;$fl=;$ext='';$app=0;$m='media_file_'+(get-date).ToString('hhmmssf')+$ext;if($ext -eq '.py'){$app='python3 '};
+$wa='';$la='';if(Test-Path -Path '/usr/bin'){$os='Linux';if($ext -eq '.ps1'){$app='pwsh '}}
+else{if($ext -eq '.ps1'){if(Test-Path -Path 'C:\Program Files\PowerShell'){$app='pwsh '}else{$app='powershell '}}};
 if($ext -eq '.ps1' -And $os -eq 'Win'){$m='.\'+$m};$ver=$PSVersionTable.PSVersion.Major;
-if($ver -lt 5){Write-Host "`r`nError: PowerShell Version 5 or later is required.";
-Start-Sleep -Seconds 6;exit};$pn=$MyInvocation.MyCommand.Definition;$n=$MyInvocation.MyCommand.Name;$bt=[System.IO.File]::ReadAllBytes($pn);
-Write-Host "Decrypting Media File...";$x=2158+$fl;$j=704;$k=3;for($i=$tr; $fl+$tr -gt $i;)
+$pn=$MyInvocation.MyCommand.Definition;$n=$MyInvocation.MyCommand.Name;$bt=[System.IO.File]::ReadAllBytes($pn);
+<Repair Code Inserted Here If Required, See Below For Example>
+Write-Host "`nFound Encrypted [$ext] File`n`nDecrypting / Extracting File`r`n`nPlease Wait...";
+$x=2158+$fl;$j=704;$k=3;for($i=$tr; $fl+$tr -gt $i;)
 {$bt[$i]=$bt[$i] -bxor $bt[$j] -bxor $bt[$k] -bxor $bt[$x];$i++;$j--;$k++;$x++;if($j -lt 3) {$j=704};
 if($k -eq 705){$k=3};if($x -eq 2163+$fl){$x=2157+$fl}};Clear-Host;$trunc=$bt[$tr..($fl+$tr-1)];Remove-Item $pn;$mp=$pn.Replace($n, $m);
 if(Test-Path -Path $mp){Remove-Item -Path $mp -Force;Start-Sleep -Seconds 1};
@@ -136,12 +143,12 @@ elseif($ext -eq '.exe'){&cmd /c $m$wa;Pause}else{ii $m}}
 Clear-Host;
 $os='Win';
 
-$tr=2127;	# $tr TRuncate variable const int value. 
-		# $bt array stores the whole PNG file, $tr sets the index location for the start of the embedded user media file in $bt. 
+$tr=2265;	# $tr TRuncate variable. 
+		# $bt array contains the whole PNG file, $tr sets the index location for the start of the embedded user media file in $bt. 
 
-$fl=;		# $fl user File Length int variable value (bytes) updated by C++ program.
+$fl=;		# $fl user File Length variable value updated by C++ program.
 		# Tells PowerShell how many bytes to read from the start index ($tr) of the $bt array.
-		# This should be the entirety of the embedded user file, which will be stored in $trunc 
+		# This should be the entirety of the embedded user file, which will be stored in $trunc. 
 
 $ext='';	# User file extension variable, updated by C++ program, e.g. ($ext='.mp4').
 
@@ -152,24 +159,28 @@ $m='media_file_'+(get-date).ToString('hhmmssf')+$ext;	# Give extracted media a u
 if($ext -eq '.py')
 	{$app='python3 '};
 
-$wa='';		# $wa, Windows Arguments, command-line arguments string variable, updated by C++ program
+$wa='';		# $wa, Windows Arguments, command-line arguments string variable, updated by C++ program.
 $la='';    	# $la, Linux Arguments, command-line arguments string variable, updated by C++ program.
 		# Only '.py', '.ps1' and '.exe' files get the option of adding command-line arguments for their embedded files.
 
-if(Test-Path -Path '/usr/bin')
-	{$os='Linux';
-		if($ext -eq '.ps1')
-	{$app='pwsh '}}
-else{if($ext -eq '.ps1')
-	{$app='powershell '}};
+if(Test-Path -Path '/usr/bin'){
+	$os='Linux';
+	if($ext -eq '.ps1'){		# If we are using Linux and the file extension is '.ps1' then $app = 'pwsh'.
+		$app='pwsh '}
+	}
+else{					# Else, we must be using Windows. Check for PowerShell directory within C:\Program Files. 
+	if($ext -eq '.ps1'){		# If found, this indicates PowerShell version 6 or higher is installed, so $app='pwsh'.	
+		if(Test-Path -Path 'C:\Program Files\PowerShell'){
+		$app='pwsh '}
+	else{
+		$app='powershell '}	# No PowerShell directory found in C:\Program Files. So version must be less than 6. $app='powershell'.
+		}
+};
+
 if($ext -eq '.ps1' -And $os -eq 'Win')
 	{$m='.\'+$m};
-$ver=$PSVersionTable.PSVersion.Major;
-
-if($ver -lt 5)
-	{Write-Host "`r`nError: PowerShell Version 5 or later is required.";
-	Start-Sleep -Seconds 6;exit};
 	
+$ver=$PSVersionTable.PSVersion.Major;	
 $pn=$MyInvocation.MyCommand.Definition;
 $n=$MyInvocation.MyCommand.Name;
 
@@ -180,7 +191,7 @@ $bt=[System.IO.File]::ReadAllBytes($pn);	# (1)
 
 # If required, PowerShell 'repair code' for the user data file gets inserted here, 
 # by the C++ program. The user data file CANNOT contain any occurrence of the PowerShell
-# End Comment-Block string '#>'. This will cause the embedded PowerShell script to fail if
+# End Comment-Block string '#>'. This will cause the embedded PowerShell script to break if
 # it encounters that string anywhere in the user file. 
 
 # The C++ program will check the file and if found, modify a byte for every occurrence
@@ -207,30 +218,32 @@ while(++$i -lt $idx.count)
 # End of repair code example.
 --------------------------------------------------------------------------------------------------
 
-# (3) The C++ program has 'encrypted' the media file with simple XOR. 
+# (3) The C++ program has 'encrypted' the media file with simple XOR method. 
 # Decrypt it here.
 
-Write-Host "Decrypting Media File...";
+Write-Host "`nFound Encrypted [$ext] File`n`nDecrypting / Extracting File`r`n`nPlease Wait...";
 
-$x = 2158 + $fl;	# $x var value is set as the 2158th (+$fl file length) character index location (start of Time xorNum string)
-$j = 704;		# $j var value is set as the 704th character index location of the PNG file.
-$k = 3;
+$x = 2266 + $fl;	# $x is set to the 2266th (+$fl file length) character index location, start of the xorNum time string in image file.
+$j = 704;		# $j is set to the 704th character index location of the image file.
+$k = 3;			# $k is set to the 3rd character index location of the image file.
 
-for($i = $tr; $fl + $tr -gt $i;){ 		# Start 'for loop' at index location $tr, the start index of user data file,
-						# until we reach $fl File Length value of user file.
+for($i = $tr; $fl + $tr -gt $i;){ 	# Start 'for loop' at index location $tr, the start index of user data file,
+					# until we reach $fl (File Length) value of user file.
 						
-	$bt[$i] = $bt[$i] -bxor $bt[$j] -bxor $bt[$k] -bxor $bt[$x];	# XOR each character $bt[$i] of user data file 
-									# against character $bt[$j], $bt[$k], $bt[$x];
+	$bt[$i] = $bt[$i] -bxor $bt[$j] -bxor $bt[$k] -bxor $bt[$x];	# XOR each scrambled byte $bt[$i] of user data file 
+									# against byte at each index location of $bt[$j], $bt[$k] and $bt[$x],
+									# reversing the XOR process from the C++ program and restoring the
+									# original byte.
 	$i++; $j--; $k++; $x++;
 	
 	if($j -lt 3) {
 		$j = 704}		# Reset $j back to the 704th index location once $j is less than 3
 	};
-	if($k -eq 705){			# Reset $k back to the 3rd index location once $k hits 705
+	if($k -eq 705){			# Reset $k back to the 3rd index location once $k is 705.
 		$k = 3
 	};
-	if($x -eq 2163 + $fl){		# Reset $x back to the 2157th index location once $x hits 2163
-		$x = 2157 + $fl}
+	if($x -eq 2272 + $fl){		# Reset $x back to the 2266th index location once $x is 2272.
+		$x = 2266 + $fl}
 };
 	
 --------------------------------------------------------------------------------------------------
@@ -244,11 +257,11 @@ Remove-Item $pn;			# (5) Remove "pdvps_tmp.ps1" file.
 
 $mp=$pn.Replace($n, $m);
 
-if(Test-Path -Path $mp)			# If there already exists a 'pdvps_extracted' folder containing a 'media_file', delete it.
+if(Test-Path -Path $mp)			# If there already exists a 'pdvps_extracted' folder containing a 'media_file' of the same name, delete it.
 	{Remove-Item -Path $mp -Force;
 	Start-Sleep -Seconds 1};
 	
-if($ver -gt 5) {
+if($ver -gt 5) {							# Different methods for writing output file depending on PowerShell version.
 	Set-Content -value $trunc -AsByteStream -path "$($mp)"}		# (6) Write the contents of $trunc (user media file) to disk.
 else{
 	Set-Content -value $trunc -encoding byte -path "$($mp)"};	# (6) Write the contents of $trunc (user media file) to disk.
@@ -292,12 +305,12 @@ else{
 	if($app){
 
 		# (7) Python or PowerShell? 
-		# ($app ="python3" or "powershell", depending on file extension
+		# ($app ="python3", "powershell" or "pwsh", depending on file extension and PowerShell version.
 		# ($wa Windows arguments, command-line arguments string variable)
 
 		&cmd /c $app$m$wa;	# e.g. "&cmd /c python3 media_file.py <arguments>"
-					# e.g. "&cmd /c powershell .\media_file.ps1 <arguments>"
-
+					# e.g. "&cmd /c powershell .\media_file.ps1 <arguments>" (PowerShell version below version 6).
+					# e.g. "&cmd /c pwsh .\media_file.ps1 <arguments>" (PowerShell version 6 or later).
 		Write-Host;
 		Pause   	
 		}
