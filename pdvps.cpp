@@ -69,11 +69,11 @@ int main(int argc, char** argv) {
 		// For more information about the PowerShell script, see the "scripts_info.txt" file that's part of this repo on GitHub. 
 		int pwshInsertIndex[5] = { DATA_SIZE + 2820, DATA_SIZE + 2427, DATA_SIZE + 2420, DATA_SIZE + 2317, DATA_SIZE + 2310 },
 
-			nameLength = DATA_FILE.length(),
-			dot = DATA_FILE.find_last_of('.'),
-			histChunkLengthInsertIndex = 2257,	// Index location in image file for hIST chunk length field. 
-			histChunkLength = 1360,			// Initial hIST chunk size. This will grow as additional data items are inserted into the PS script.
-			bits = 24;
+		nameLength = DATA_FILE.length(),
+		dot = DATA_FILE.find_last_of('.'),
+		histChunkLengthInsertIndex = 2257,	// Index location in image file for hIST chunk length field. 
+		histChunkLength = 1360,			// Initial hIST chunk size. This will grow as additional data items are inserted into the PS script.
+		bits = 24;
 
 		// If user file does not have an extension, assume it's an executable file, ext will be set to '.exe'.
 		if (dot < 0 || nameLength - dot == 1) {
