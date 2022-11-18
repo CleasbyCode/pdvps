@@ -12,7 +12,7 @@ PDVPS is similar to my other program [***pdvzip***](https://github.com/CleasbyCo
 
 **1).** It is supplied with a default PNG image that you use to embed your file, which will be '*encrypted*', using simple XOR method. The image is small in size, which maximises the amount of data you can embed (5,233,664 bytes, almost 5MB), it also substantially reduces the required C++ code of the main program. (If you want to use your own image, then stick with [***pdvzip***](https://github.com/CleasbyCode/pdvzip)).
 
-**2).** There is an embedded PowerShell script within this default PNG image that is used to decrypt, extract and open/play/run (depending on media type) your embedded file. This eliminates the need to use an external unzip tool. 
+**2).** There is an embedded PowerShell script within the default PNG image that is used to decrypt, extract and open/play/run (depending on media type) your embedded file.
 
 This program is really just a simple experiment of mine in testing if I could achieve some practical use of PowerShell code embedded within a PNG image.
 
