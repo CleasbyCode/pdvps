@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 		}
     
 		const int MAX_FILE_SIZE_BYTES = 5233664;
-    ptrdiff_t ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+		ptrdiff_t ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     
 		std::string tmpNum = std::to_string(ms);
 		tmpNum = std::string(tmpNum.rbegin(), tmpNum.rend());
@@ -45,22 +45,22 @@ int main(int argc, char** argv) {
 		}
     
 		std::string dataSizeLengthString = std::to_string(DATA_SIZE),
-      argsLinux, argsWindows,	ext;	
+      		argsLinux, argsWindows,	ext;	
 		
-    int pwshInsertIndex[5] = { DATA_SIZE + 2820, DATA_SIZE + 2427, DATA_SIZE + 2420, DATA_SIZE + 2317, DATA_SIZE + 2310 },
+    		int pwshInsertIndex[5] = { DATA_SIZE + 2820, DATA_SIZE + 2427, DATA_SIZE + 2420, DATA_SIZE + 2317, DATA_SIZE + 2310 },
 		nameLength = DATA_FILE.length(),
 		dot = DATA_FILE.find_last_of('.'),
 		histChunkLengthInsertIndex = 2257,	
 		histChunkLength = 1360,			
 		bits = 24;
 		
-    if (dot < 0 || nameLength - dot == 1) {
+    		if (dot < 0 || nameLength - dot == 1) {
 			ext = ".exe";
 		}
 		else {
 			ext = nameLength - dot < 5 ? DATA_FILE.substr(dot, (nameLength - dot)) : DATA_FILE.substr(dot, 5);
 			
-      for_each(ext.begin(), ext.end(), [](char& c) {
+      		for_each(ext.begin(), ext.end(), [](char& c) {
 				c = ::tolower(c);
 				});
 		}
@@ -68,12 +68,12 @@ int main(int argc, char** argv) {
 		if (ext == ".py" || ext == ".ps1" || ext == ".exe") {
 			const int MAX_ARGS_LENGTH = 100; 
 		
-      std::cout << "\nFor this file type you can provide command-line arguments here, if required.\n\nLinux: ";
+      			std::cout << "\nFor this file type you can provide command-line arguments here, if required.\n\nLinux: ";
 			std::getline(std::cin, argsLinux);
 			std::cout << "\nWindows: ";
 			std::getline(std::cin, argsWindows);
 			
-      if (argsLinux.length() > MAX_ARGS_LENGTH || argsWindows.length() > MAX_ARGS_LENGTH) {
+      			if (argsLinux.length() > MAX_ARGS_LENGTH || argsWindows.length() > MAX_ARGS_LENGTH) {
 				std::cerr << "\nError: Arguments exceed maximum length.\n\n";
 				return -1;
 			}
@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
     
 		int i = 0, pdvpsXorInsertIndex = 2266;	
 		
-    while (pdvpsXorInsertIndex != 2272) ImageVec.at(pdvpsXorInsertIndex++) = xorNum[i++];
+    		while (pdvpsXorInsertIndex != 2272) ImageVec.at(pdvpsXorInsertIndex++) = xorNum[i++];
     
 		char byte;
 		int j = 704, k = 3, x = 2266;	
@@ -119,14 +119,14 @@ int main(int argc, char** argv) {
 		if (argsLinux.length() > 0 || argsWindows.length() > 0) {
 			argsLinux.insert(0, "\x20"), argsWindows.insert(0, "\x20");
 		
-      ImageVec.insert(ImageVec.begin() + pwshInsertIndex[1], argsLinux.begin(), argsLinux.end());
+      			ImageVec.insert(ImageVec.begin() + pwshInsertIndex[1], argsLinux.begin(), argsLinux.end());
 			ImageVec.insert(ImageVec.begin() + pwshInsertIndex[2], argsWindows.begin(), argsWindows.end());
 		}
     
 		ImageVec.insert(ImageVec.begin() + pwshInsertIndex[3], ext.begin(), ext.end());
 		ImageVec.insert(ImageVec.begin() + pwshInsertIndex[4], dataSizeLengthString.begin(), dataSizeLengthString.end());
 		
-    histChunkLength += DATA_SIZE + pwshRepairCodeLength + ext.length() + dataSizeLengthString.length() + argsLinux.length() + argsWindows.length();
+    		histChunkLength += DATA_SIZE + pwshRepairCodeLength + ext.length() + dataSizeLengthString.length() + argsLinux.length() + argsWindows.length();
     
 		while (bits) ImageVec.at(histChunkLengthInsertIndex++) = (histChunkLength >> (bits -= 8)) & 0xff;
     
@@ -135,7 +135,7 @@ int main(int argc, char** argv) {
 		std::string outFile = DATA_FILE.substr(0, SLASH_POS) + "pdv" + "_" + DATA_FILE.substr(SLASH_POS, DATA_FILE.length()) + ".png";
 		std::ofstream writeFinal(outFile, std::ios::binary);
 		
-    if (!writeFinal) {
+    		if (!writeFinal) {
 			std::cerr << "\nWrite Error: Unable to write to file.\n\n";
 			return -1;
 		}
