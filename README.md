@@ -29,7 +29,7 @@ Compile and run the program under Windows or **Linux**.
 ## Usage (Linux)
 
 ```c
-$ g++ pdvps.cpp -w -o pdvps
+$ g++ pdvps.cpp -o pdvps
 $
 $ ./pdvps
 
