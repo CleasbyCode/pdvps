@@ -80,7 +80,12 @@ Image is embedded with an MP4 video file. Click the image to fully expand it, th
 
 [YouTube](https://www.youtube.com/watch_popup?v=FCleYo9vJas)
 
-Running encrypted PNG image on Linux. PowerShell script will decrypt, extract and play the embedded mp4 video file.
+Running encrypted PNG image on Linux. PowerShell script will decrypt, extract and play the embedded mp4 video file.  
+
+Other editions of **pdv** you may find useful:-  
+
+* [pdvzip - PNG Data Vehicle for Twitter, ZIP Edition](https://github.com/CleasbyCode/pdvzip)  
+* [pdvrdt - PNG Data Vehicle for Reddit](https://github.com/CleasbyCode/pdvrdt)  
 
 ##
 
