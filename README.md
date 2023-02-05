@@ -70,7 +70,7 @@ G:\demo> .\pdv_image_file.cmd
 
 ```
 
-[** Video Demo (YouTube)**](https://www.youtube.com/watch_popup?v=FCleYo9vJas)
+[**Video Demo (YouTube)**](https://www.youtube.com/watch_popup?v=FCleYo9vJas)
 
 Running encrypted PNG image on Linux. PowerShell script will decrypt, extract and play the embedded mp4 video file.  
 
