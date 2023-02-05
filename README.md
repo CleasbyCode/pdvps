@@ -70,12 +70,6 @@ G:\demo> .\pdv_image_file.cmd
 
 ```
 
-**Image Example**  
-
-[Twitter](https://twitter.com/CleasbyCode/status/1593772186350804993) 
-
-Image is embedded with an MP4 video file. Click the image to fully expand it, then right-click image, select "Save image as..." from menu. Run image as per instructions above.
-
 **Video Example**
 
 [YouTube](https://www.youtube.com/watch_popup?v=FCleYo9vJas)
