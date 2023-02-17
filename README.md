@@ -2,7 +2,7 @@
 
 PNG Data Vehicle for Twitter, PowerShell Edition (PDVPS).
 
-Embed any file of up to ≈5MB within a tweetable and '*executable*' PNG polyglot image.
+Embed any file of up to ~5MB within a tweetable and '*executable*' PNG polyglot image.
 
 ![Demo Image Embedded with PowerShell Script & Encrypted MP4 Video File](https://github.com/CleasbyCode/pdvps/blob/main/Demo_Image/rick.png)
 {***Image demo:  Encrypted MP4 video embedded within this PNG image***}
