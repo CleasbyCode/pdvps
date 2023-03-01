@@ -1,5 +1,5 @@
 
-Two scripts are embedded within the default PNG polyglot file.
+Two scripts are embedded within the default PNG image file (ImageVec.hpp).
 
 1. Linux and Windows shell/batch script, with PowerShell commands (this runs first).
 2. Main PowerShell Script.
