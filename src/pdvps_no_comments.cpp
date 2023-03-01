@@ -141,7 +141,7 @@ int main(int argc, char** argv) {
 
 		const ptrdiff_t SLASH_POS = DATA_FILE.find_last_of("\\/") + 1;
 		
-		std::string outFile = DATA_FILE.substr(0, SLASH_POS) + "pdv" + "_" + DATA_FILE.substr(SLASH_POS, DATA_FILE.length()) + ".png";
+		std::string outFile = "pdvps_image.png";
 
 		std::ofstream writeFinal(outFile, std::ios::binary);
 		if (!writeFinal) {
