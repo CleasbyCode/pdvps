@@ -39,7 +39,7 @@ Usage:  pdvps  <your_file>
 
 $ ./pdvps my_document.pdf
 
-Created output file 'pdv_my_document.pdf.png' 4232948 bytes.
+Created output file 'pdvps_image.png' 4232948 bytes.
 
 All Done!
 
@@ -55,18 +55,18 @@ You can also upload and share the PNG image to *some popular image hosting sites
 Make sure image file has executable permissions.
 ```c
 
-$ chmod +x pdv_image_file.png
+$ chmod +x pdv_image.png
 $
-$ ./pdv_image_file.png 
+$ ./pdv_image.png 
 
 ```  
 **Windows**   
 First, rename the '*.png*' file extension to '*.cmd*'.
 ```c
 
-G:\demo> ren pdv_image_file.png pdv_image_file.cmd
+G:\demo> ren pdv_image.png pdv_image.cmd
 G:\demo>
-G:\demo> .\pdv_image_file.cmd
+G:\demo> .\pdv_image.cmd
 
 ```
 
