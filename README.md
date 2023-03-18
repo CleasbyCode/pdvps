@@ -1,6 +1,6 @@
 # pdvps
 
-PNG Data Vehicle for Twitter, PowerShell Edition (PDVPS).
+PNG Data Vehicle for Twitter, PowerShell Edition (pdvps).
 
 Embed any file of up to ~5MB within a tweetable and "*executable*" PNG polyglot image.
 
