@@ -70,7 +70,7 @@ G:\demo> .\pdvps_image.cmd
 
 [**Video Demo (YouTube)**](https://www.youtube.com/watch_popup?v=FCleYo9vJas) - Running PNG image on Linux. PowerShell script will decrypt, extract and play the embedded mp4 video file.  
 
-Other editions of **pdv** you may find useful:-  
+My other programs you may find useful:-
 
 * [jdvrif - JPG Data Vehicle for Reddit, Imgur, Flickr & Other Compatible Social Media / Image Hosting Sites](https://github.com/CleasbyCode/jdvrif)
 * [pdvzip - PNG Data Vehicle (ZIP Edition) for Compatible Social Media & Image Hosting Sites](https://github.com/CleasbyCode/pdvzip)
