@@ -27,7 +27,7 @@ Compile and run the program under Windows or **Linux**.
 
 ## Usage (Linux)
 
-```c
+```bash
 $ g++ pdvps.cpp -s -o pdvps
 $
 $ ./pdvps
@@ -41,7 +41,6 @@ Created output file 'pdvps_image.png' 4232948 bytes.
 
 All Done!
 
-$
 ```
 
 Once your file has been embedded within the PNG image, it's ready to be shared (tweeted) or "*executed*" whenever you want to extract and open/play/run (depending on media type) your embedded file.
@@ -51,7 +50,7 @@ You can also upload and share the PNG image to *some popular image hosting sites
 ## Extracting Your File From the PNG Image
 **Linux (PowerShell required)**    
 Make sure image file has executable permissions.
-```c
+```bash
 
 $ chmod +x pdvps_image.png
 $
@@ -60,7 +59,7 @@ $ ./pdvps_image.png
 ```  
 **Windows**   
 First, rename the '*.png*' file extension to '*.cmd*'.
-```c
+```bash
 
 G:\demo> ren pdvps_image.png pdvps_image.cmd
 G:\demo>
@@ -68,7 +67,7 @@ G:\demo> .\pdvps_image.cmd
 
 ```
 
-[**Video Demo (YouTube)**](https://www.youtube.com/watch_popup?v=FCleYo9vJas) - Running PNG image on Linux. PowerShell script will decrypt, extract and play the embedded mp4 video file.  
+[**Video Demo**](https://www.youtube.com/watch_popup?v=FCleYo9vJas)
 
 My other programs you may find useful:-
 
