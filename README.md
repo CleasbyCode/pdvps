@@ -1,10 +1,10 @@
 # pdvps
 
-PNG Data Vehicle for Twitter, PowerShell Edition (pdvps).
+PNG Data Vehicle for Twitter, PowerShell Edition.
 
 Embed any file type (5MB max.) within a tweetable and "*executable*" PNG image.
 
-![Demo Image Embedded with PowerShell Script & Encrypted MP4 Video File](https://github.com/CleasbyCode/pdvps/blob/main/Demo_Image/rick.png)
+![Demo Image](https://github.com/CleasbyCode/pdvps/blob/main/Demo_Image/rick.png)
 {***Image demo:  Encrypted MP4 video embedded within this PNG image***}
 
 Works for both Windows and *Linux. 
@@ -13,15 +13,15 @@ Works for both Windows and *Linux.
 
 pdvps is similar to my other program [***pdvzip***](https://github.com/CleasbyCode/pdvzip). The two main differences in this edition of **pdv** are: 
 
-**1).** It uses a default PNG image for where your data file is inserted and '*encrypted*' (simple XOR method). The image is small in size, which maximises the amount of data you can embed (5,233,664 bytes, almost 5MB). Using a default image reduces the required C++ code of the main program. If you want to use your own image for embedding files, then stick with [***pdvzip***](https://github.com/CleasbyCode/pdvzip).
+**1)** It uses a default PNG image for where your data file is embedded and '*encrypted*'. The image is small in size, which maximises the amount of data you can embed (5,233,664 bytes, almost 5MB). Using a default image reduces the required C++ code of the main program. If you want to use other images for embedding files, then stick with [***pdvzip***](https://github.com/CleasbyCode/pdvzip).
 
-**2).** There is a PowerShell script embedded within the default PNG image, that is used to decrypt, extract and open/play/run (depending on media type) your embedded file, when you execute the PNG file.
+**2)** There is a PowerShell script embedded within the default PNG image, that is used to decrypt, extract and open your embedded file, when you execute the PNG file.
 
 For more information on the embedded scripts within the default PNG image, see the [***scripts_info.txt***](https://github.com/CleasbyCode/pdvps/blob/main/src/scripts_info.txt) file supplied with this repo.
 
 For information about PNG image settings and arbitrary data preservation for Twitter, visit the relevant link on [***pdvzip***](https://github.com/CleasbyCode/pdvzip#png-image-requirements-for-arbitrary-data-preservation)
 
-Always use file extensions for your data file: my_doc.pdf, my_video.mp4, my_program.py, etc. A filename without an extension will be considered an '.exe' file.
+Always use file extensions for your data file: my_doc.pdf, my_video.mp4, my_program.py, etc.
 
 Compile and run the program under Windows or **Linux**.
 
@@ -43,9 +43,9 @@ All Done!
 
 ```
 
-Once your file has been embedded within the PNG image, it's ready to be shared (tweeted) or "*executed*" whenever you want to extract and open/play/run (depending on media type) your embedded file.
+Once your file has been embedded within the PNG image, it's ready to be shared (tweeted) or "*executed*" whenever you want to extract and open your embedded file.
 
-You can also upload and share the PNG image to *some popular image hosting sites, such as [***Flickr***](https://www.flickr.com/), [***ImgBB***](https://imgbb.com/), [***Imgur***](https://imgur.com/a/zF40QMX), [***ImgPile***](https://imgpile.com/), [***ImageShack***](https://imageshack.com/), [***PostImage***](https://postimg.cc/xcCcvpLJ), etc. **Not all image hosting sites are compatible, e.g. [***ImgBox***], [***Reddit***](https://github.com/CleasbyCode/pdvrdt).*
+You can also upload and share the PNG image to *some popular image hosting sites, such as [***Flickr***](https://www.flickr.com/), [***ImgBB***](https://imgbb.com/), [***Imgur***](https://imgur.com/a/zF40QMX), [***ImgPile***](https://imgpile.com/), [***ImageShack***](https://imageshack.com/), [***PostImage***](https://postimg.cc/xcCcvpLJ).
 
 ## Extracting Your File From the PNG Image
 **Linux (PowerShell required)**    
