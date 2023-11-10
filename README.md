@@ -1,7 +1,7 @@
 # pdvps
 
 PNG Data Vehicle for Twitter, PowerShell Edition.
-[Imgur](https://imgur.com/UBkC3Xg)
+
 Embed any file type (5MB max.) within a tweetable and "*executable*" PNG image.
 
 ![Demo Image](https://github.com/CleasbyCode/pdvps/blob/main/Demo_Image/rick.png)
