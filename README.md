@@ -15,7 +15,9 @@ pdvps is similar to my other program [***pdvzip***](https://github.com/CleasbyCo
 
 **1)** It uses a default PNG image for where your data file is embedded and '*encrypted*'.  
 The image is small in size, which maximises the amount of data you can embed.  
-Using a default image reduces the required C++ code of the main program. If you want to use other images for embedding files, then stick with [***pdvzip***](https://github.com/CleasbyCode/pdvzip).
+
+Using a default image reduces the required C++ code of the main program.  
+If you want to use other images for embedding files, then stick with [***pdvzip***](https://github.com/CleasbyCode/pdvzip).
 
 **2)** There is a PowerShell script embedded within the default PNG image, that is used to decrypt, extract and open your embedded file, when you execute the PNG file.
 
