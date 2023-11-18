@@ -5,7 +5,7 @@ PNG Data Vehicle for Twitter, PowerShell Edition.
 Embed any file type (5MB max.) within a tweetable and "*executable*" PNG image.  
 
 ![Demo Image](https://github.com/CleasbyCode/pdvps/blob/main/Demo_Image/soldier.png)  
-{***Image demo: Encrypted JPG image embedded within this PNG image***}
+{***Encrypted JPG image embedded within this PNG image***}
 
 Works for both Windows and *Linux. 
 
@@ -25,7 +25,8 @@ extract and open your embedded file, when you execute the PNG file.
 For more information on the embedded scripts within the default PNG image,  
 see the [***scripts_info.txt***](https://github.com/CleasbyCode/pdvps/blob/main/src/scripts_info.txt) file supplied with this repo.
 
-For information about PNG image settings and arbitrary data preservation for Twitter, visit the relevant link on [***pdvzip***](https://github.com/CleasbyCode/pdvzip#png-image-requirements-for-arbitrary-data-preservation)
+For information about PNG image settings and arbitrary data preservation for Twitter,  
+visit the relevant link on [***pdvzip***](https://github.com/CleasbyCode/pdvzip#png-image-requirements-for-arbitrary-data-preservation)
 
 Always use file extensions for your data file: my_doc.pdf, my_video.mp4, my_program.py, etc.
 
