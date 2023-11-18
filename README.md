@@ -46,8 +46,6 @@ All Done!
 
 Once your file has been embedded within the PNG image, it's ready to be shared (tweeted) or "*executed*" whenever you want to extract and open your embedded file.
 
-You can also upload and share the PNG image to *some popular image hosting sites, such as [***Flickr***](https://www.flickr.com/), [***ImgBB***](https://imgbb.com/), [***Imgur***](https://imgur.com/a/zF40QMX), [***ImgPile***](https://imgpile.com/), [***PostImage***](https://postimg.cc/xcCcvpLJ).
-
 ## Extracting Your File From the PNG Image
 **Linux (PowerShell required)**    
 Make sure image file has executable permissions.
