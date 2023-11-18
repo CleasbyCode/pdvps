@@ -36,7 +36,6 @@ Compile and run the program under **Windows** or **Linux**.
 
 ```console
 $ g++ pdvps.cpp -O2 -s -o pdvps
-$
 $ ./pdvps
 
 Usage: pdvps <file>
@@ -58,7 +57,6 @@ Make sure image file has executable permissions.
 ```console
 
 $ chmod +x pdvps_image.png
-$
 $ ./pdvps_image.png 
 
 ```  
@@ -67,7 +65,6 @@ First, rename the '*.png*' file extension to '*.cmd*'.
 ```console
 
 G:\demo> ren pdvps_image.png pdvps_image.cmd
-G:\demo>
 G:\demo> .\pdvps_image.cmd
 
 ```
