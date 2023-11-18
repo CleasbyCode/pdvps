@@ -28,7 +28,7 @@ Compile and run the program under Windows or **Linux**.
 
 ## Usage (Linux)
 
-```bash
+```console
 $ g++ pdvps.cpp -O2 -s -o pdvps
 $
 $ ./pdvps
@@ -49,7 +49,7 @@ Once your file has been embedded within the PNG image, it's ready to be shared (
 ## Extracting Your File From the PNG Image
 **Linux (PowerShell required)**    
 Make sure image file has executable permissions.
-```bash
+```console
 
 $ chmod +x pdvps_image.png
 $
@@ -58,7 +58,7 @@ $ ./pdvps_image.png
 ```  
 **Windows**   
 First, rename the '*.png*' file extension to '*.cmd*'.
-```bash
+```console
 
 G:\demo> ren pdvps_image.png pdvps_image.cmd
 G:\demo>
