@@ -7,9 +7,9 @@ Embed any file type (**5MB** max.) within a tweetable and "*executable*" **PNG**
 ![Demo Image](https://github.com/CleasbyCode/pdvps/blob/main/Demo_Image/soldier.png)  
 {*Encrypted **JPG** image embedded within this **PNG** image*}
 
-Works for both **Windows** and ***\Linux**. 
+Works for both **Windows** and ***Linux**. 
 
-(***\PowerShell** required).
+(***PowerShell** required).
 
 pdvps is similar to my other program [***pdvzip***](https://github.com/CleasbyCode/pdvzip). The two main differences in this edition of **pdv** are: 
 
