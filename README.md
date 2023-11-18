@@ -2,7 +2,7 @@
 
 **PNG Data Vehicle for Twitter, PowerShell Edition**
 
-Embed any file type (**5MB** max.) within a tweetable and "*executable*" **PNG** image.  
+Embed any file type (**5MB** max.) within a tweetable and "[*executable*](https://github.com/CleasbyCode/pdvps#extracting-your-file-from-the-png-image)" **PNG** image.  
 
 ![Demo Image](https://github.com/CleasbyCode/pdvps/blob/main/Demo_Image/soldier.png)  
 {*Encrypted **JPG** image embedded within this **PNG** image*}
