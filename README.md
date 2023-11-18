@@ -4,8 +4,8 @@ PNG Data Vehicle for Twitter, PowerShell Edition.
 
 Embed any file type (5MB max.) within a tweetable and "*executable*" PNG image.
 
-![Demo Image](https://github.com/CleasbyCode/pdvps/blob/main/Demo_Image/soldier.png)
-{***Image demo:  Encrypted MP4 video embedded within this PNG image***}
+![Demo Image](https://github.com/CleasbyCode/pdvps/blob/main/Demo_Image/soldier.png)  
+{***Image demo: Encrypted JPG image embedded within this PNG image***}
 
 Works for both Windows and *Linux. 
 
@@ -13,7 +13,8 @@ Works for both Windows and *Linux.
 
 pdvps is similar to my other program [***pdvzip***](https://github.com/CleasbyCode/pdvzip). The two main differences in this edition of **pdv** are: 
 
-**1)** It uses a default PNG image for where your data file is embedded and '*encrypted*'. The image is small in size, which maximises the amount of data you can embed (5,233,664 bytes, almost 5MB). Using a default image reduces the required C++ code of the main program. If you want to use other images for embedding files, then stick with [***pdvzip***](https://github.com/CleasbyCode/pdvzip).
+**1)** It uses a default PNG image for where your data file is embedded and '*encrypted*'. The image is small in size, which maximises the amount of data you can embed.  
+Using a default image reduces the required C++ code of the main program. If you want to use other images for embedding files, then stick with [***pdvzip***](https://github.com/CleasbyCode/pdvzip).
 
 **2)** There is a PowerShell script embedded within the default PNG image, that is used to decrypt, extract and open your embedded file, when you execute the PNG file.
 
@@ -28,11 +29,11 @@ Compile and run the program under Windows or **Linux**.
 ## Usage (Linux)
 
 ```bash
-$ g++ pdvps.cpp -s -o pdvps
+$ g++ pdvps.cpp -O2 -s -o pdvps
 $
 $ ./pdvps
 
-Usage: pdvps <your_file>
+Usage: pdvps <file>
        pdvps --info
 
 $ ./pdvps my_document.pdf
