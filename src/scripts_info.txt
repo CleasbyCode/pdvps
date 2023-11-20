@@ -1,15 +1,15 @@
 
 Two scripts are embedded within the default PNG image file (Image_Vec.hpp).
 
-1. Linux and Windows shell/batch script, with PowerShell commands (this runs first).
-2. Main PowerShell Script.
+1. Linux and Windows shell/batch script, with some PowerShell commands (this runs first).
+2. Main PowerShell Script (.ps1).
 
 The Linux and Windows shell/batch commands run first. This is in two parts:-
 
-A. Linux shell + PowerShell commands.
-B. Windows batch + PowerShell commands.
+A. Linux shell + some PowerShell commands.
+B. Windows batch + some PowerShell commands.
 
-Found near top of PNG image within the "iCCP" chunk, after the fake IDAT chunk.
+Found near top of the PNG image within the "iCCP" chunk, after the fake IDAT chunk.
 
 In a nutshell, these commands do the following for both Linux and Windows:-
 
@@ -22,7 +22,7 @@ strings to the beginning '<#' and end '#>' of the PNG file.
 4. Write this modified file to disk as "pdvps_tmp.ps1" (PowerShell file) within the "pdvps_extracted" directory.
 5. Move the original PNG polyglot image file into the "pdvps_extracted" directory.
 6. Change into the "pdvps_extracted" directory.
-7. Get PowerShell to run the "pdvps_tmp.ps1" file, which will start the main PowerShell script embedded in the image.
+7. Get PowerShell to run the "pdvps_tmp.ps1" file, which will find & start the main PowerShell script embedded in the image.
 
 iCCP chunk
 
