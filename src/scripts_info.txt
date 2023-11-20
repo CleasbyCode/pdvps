@@ -9,7 +9,7 @@ The Linux and Windows shell/batch commands run first. This is in two parts:-
 A. Linux shell + PowerShell commands.
 B. Windows batch + PowerShell commands.
 
-Found near top of PNG image within the "bKGD" chunk, after the fake IDAT chunk.
+Found near top of PNG image within the "iCCP" chunk, after the fake IDAT chunk.
 
 In a nutshell, these commands do the following for both Linux and Windows:-
 
@@ -24,7 +24,7 @@ strings to the beginning '<#' and end '#>' of the PNG file.
 6. Change into the "pdvps_extracted" directory.
 7. Get PowerShell to run the "pdvps_tmp.ps1" file, which will start the main PowerShell script embedded in the image.
 
-bKGD chunk
+iCCP chunk
 
 REM;clear;export pdvps_file="$0";echo 'Clear-Host;$ErrorActionPreference="SilentlyContinue";New-Item pdvps_extracted -itemtype directory;
 $bt=[System.IO.File]::ReadAllBytes($env:pdvps_file);$bt[0]=0x0d;$bt[1]=0x3c;$bt[2]=0x23;
@@ -118,7 +118,7 @@ hIST chunk
 
 <The encrypted user data file will be embedded here, before the main PowerShell script>
 
-PDVPS ( <- These characters are replaced by the 5 byte xorNum time string, see C++ source).
+YOLO0xFE ( <- The first four characters are replaced by a 4 byte crc value used as the 5 byte key for basic xor encryption. See C++ source).
 
 #>
 Clear-Host;$os='Win';$tr=2265;$fl=;$ext='';$app=0;$m='media_file_'+(get-date).ToString('hhmmssf')+$ext;if($ext -eq '.py'){$app='python3 '};
@@ -128,9 +128,9 @@ if($ext -eq '.ps1' -And $os -eq 'Win'){$m='.\'+$m};$ver=$PSVersionTable.PSVersio
 $pn=$MyInvocation.MyCommand.Definition;$n=$MyInvocation.MyCommand.Name;$bt=[System.IO.File]::ReadAllBytes($pn);
 <Repair Code Inserted Here If Required, See Below For Example>
 Write-Host "`nFound Encrypted [$ext] File`n`nDecrypting / Extracting File`r`n`nPlease Wait...";
-$x=2158+$fl;$j=704;$k=3;for($i=$tr; $fl+$tr -gt $i;)
-{$bt[$i]=$bt[$i] -bxor $bt[$j] -bxor $bt[$k] -bxor $bt[$x];$i++;$j--;$k++;$x++;if($j -lt 3) {$j=704};
-if($k -eq 705){$k=3};if($x -eq 2163+$fl){$x=2157+$fl}};Clear-Host;$trunc=$bt[$tr..($fl+$tr-1)];Remove-Item $pn;$mp=$pn.Replace($n, $m);
+$x=2252+$fl;for($i=$tr; $fl+$tr -gt $i;)
+{$bt[$i]=$bt[$i] -bxor $bt[$x];$i++;$x++;
+if($x -eq 2257+$fl){$x=2252+$fl}};Clear-Host;$trunc=$bt[$tr..($fl+$tr-1)];Remove-Item $pn;$mp=$pn.Replace($n, $m);
 if(Test-Path -Path $mp){Remove-Item -Path $mp -Force;Start-Sleep -Seconds 1};
 if($ver -gt 5) {Set-Content -value $trunc -AsByteStream -path "$($mp)"}
 else{Set-Content -value $trunc -encoding byte -path "$($mp)"};if($os -eq 'Linux'){if($app){$app+$m,$la |sh}
@@ -138,12 +138,14 @@ elseif($ext -eq '.exe'){chmod +x $m;iex ./$m$la}else{chmod -x $m; ii $m}}else{if
 elseif($ext -eq '.exe'){&cmd /c $m$wa;Pause}else{ii $m}}
 <#
 
+[Line by line break down of above PS script]
+
 #> End comment-block, start of main PowerShell script, interpret what follows....
 
 Clear-Host;
 $os='Win';
 
-$tr=2265;	# $tr TRuncate variable. 
+$tr=2251;	# $tr TRuncate variable. 
 		# $bt array contains the whole PNG file, $tr sets the index location for the start of the embedded user media file in $bt. 
 
 $fl=;		# $fl user File Length variable value updated by C++ program.
@@ -223,27 +225,19 @@ while(++$i -lt $idx.count)
 
 Write-Host "`nFound Encrypted [$ext] File`n`nDecrypting / Extracting File`r`n`nPlease Wait...";
 
-$x = 2266 + $fl;	# $x is set to the 2266th (+$fl file length) character index location, start of the xorNum time string in image file.
-$j = 704;		# $j is set to the 704th character index location of the image file.
-$k = 3;			# $k is set to the 3rd character index location of the image file.
+$x = 2252 + $fl;	# $x is set to 2252+$fl (file length) index location, start of the 5 byte xor key.
 
 for($i = $tr; $fl + $tr -gt $i;){ 	# Start 'for loop' at index location $tr, the start index of user data file,
 					# until we reach $fl (File Length) value of user file.
 						
-	$bt[$i] = $bt[$i] -bxor $bt[$j] -bxor $bt[$k] -bxor $bt[$x];	# XOR each scrambled byte $bt[$i] of user data file 
-									# against byte at each index location of $bt[$j], $bt[$k] and $bt[$x],
-									# reversing the XOR process from the C++ program and restoring the
-									# original byte.
-	$i++; $j--; $k++; $x++;
+	$bt[$i] = $bt[$i] -bxor $bt[$x];		# XOR each scrambled byte $bt[$i] of user data file 
+							# against byte at index location of $bt[$x],
+							# reversing the XOR process from the C++ program and restoring the
+							# original data.
+	$i++; $x++;
 	
-	if($j -lt 3) {
-		$j = 704}		# Reset $j back to the 704th index location once $j is less than 3
-	};
-	if($k -eq 705){			# Reset $k back to the 3rd index location once $k is 705.
-		$k = 3
-	};
-	if($x -eq 2272 + $fl){		# Reset $x back to the 2266th index location once $x is 2272.
-		$x = 2266 + $fl}
+	if($x -eq 2257 + $fl){		# Reset $x back to the 2252 index location once $x pos is 2257.
+		$x = 2252 + $fl}
 };
 	
 --------------------------------------------------------------------------------------------------
