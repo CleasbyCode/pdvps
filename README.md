@@ -11,7 +11,7 @@ Works for both **Windows** and ***Linux**.
 
 (***PowerShell** required. *Always use the [***latest version***](https://github.com/PowerShell/PowerShell/releases) of PowerShell*).
 
-pdvps is similar to my other program [***pdvzip***](https://github.com/CleasbyCode/pdvzip). The two main differences in this edition of **pdv** are: 
+pdvps is similar to my other program [***pdvzip***](https://github.com/CleasbyCode/pdvzip). The two main differences in this edition are: 
 
 **1)** *It uses a default **PNG** image for where your data file is encrypted & embedded.  
 The image is small in size, which maximises the amount of data you can embed.*  
