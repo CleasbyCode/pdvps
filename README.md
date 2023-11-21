@@ -9,7 +9,7 @@ Embed any file type within a tweetable and "[*executable*](https://github.com/Cl
 
 Works for both **Windows** and ***Linux**. 
 
-(***PowerShell** required. *Always use the [***latest version***](https://github.com/PowerShell/PowerShell/releases/tag/v7.4.0) of PowerShell*).
+(***PowerShell** required. *Always use the [***latest version***](https://github.com/PowerShell/PowerShell/releases) of PowerShell*).
 
 pdvps is similar to my other program [***pdvzip***](https://github.com/CleasbyCode/pdvzip). The two main differences in this edition of **pdv** are: 
 
