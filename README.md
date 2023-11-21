@@ -43,8 +43,6 @@ Usage: pdvps <your_file>
 
 $ ./pdvps my_document.pdf
 
-Please wait...
-
 Encrypting and embedding data file within PNG image.
 
 OK!
