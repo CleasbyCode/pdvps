@@ -5,7 +5,9 @@
 Embed any file type within a tweetable and "[*executable*](https://github.com/CleasbyCode/pdvps#extracting-your-file-from-the-png-image)" **PNG** image.  
 
 ![Demo Image](https://github.com/CleasbyCode/pdvps/blob/main/Demo_Image/pdv_soldier.png)  
-{*Encrypted **JPG** image embedded within this **PNG** image*}
+{*Encrypted **JPG** image embedded within this **PNG** image*} 
+
+[**Video Demo**](https://youtu.be/apN0QQzK6W4)
 
 Works for both **Windows** and ***Linux**. 
 
@@ -74,8 +76,6 @@ G:\demo> ren pdvps_image.png pdvps_image.cmd
 G:\demo> .\pdvps_image.cmd
 
 ```
-
-[**Video Demo**](https://www.youtube.com/watch_popup?v=FCleYo9vJas)
 
 My other programs you may find useful:-
 
