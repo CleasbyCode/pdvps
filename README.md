@@ -1,15 +1,15 @@
 # pdvps
 
-**PNG Data Vehicle for Twitter, PowerShell Edition**
+**PNG Data Vehicle, PowerShell Edition for Twitter (5MB max.) & Reddit (20MB max.)**
 
-Embed any file type (**5MB** max.) within a tweetable and "[*executable*](https://github.com/CleasbyCode/pdvps#extracting-your-file-from-the-png-image)" **PNG** image.  
+Embed any file type within a tweetable and "[*executable*](https://github.com/CleasbyCode/pdvps#extracting-your-file-from-the-png-image)" **PNG** image.  
 
 ![Demo Image](https://github.com/CleasbyCode/pdvps/blob/main/Demo_Image/soldier.png)  
 {*Encrypted **JPG** image embedded within this **PNG** image*}
 
 Works for both **Windows** and ***Linux**. 
 
-(***PowerShell** required).
+(***PowerShell** required. *Always use the [***latest version***](https://github.com/PowerShell/PowerShell/releases/tag/v7.4.0) of PowerShell*).
 
 pdvps is similar to my other program [***pdvzip***](https://github.com/CleasbyCode/pdvzip). The two main differences in this edition of **pdv** are: 
 
