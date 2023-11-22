@@ -1,6 +1,6 @@
 # pdvps
 
-**PNG Data Vehicle (PowerShell Edition), for Twitter (5MB max.) & Reddit (20MB max.)**
+**PNG Data Vehicle (PowerShell Edition) for Twitter (5MB) and Reddit (20MB)**
 
 Embed any file type within a tweetable and "[*executable*](https://github.com/CleasbyCode/pdvps#extracting-your-file-from-the-png-image)" **PNG** image.  
 
