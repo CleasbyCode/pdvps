@@ -37,7 +37,6 @@ int main(int argc, char** argv) {
 	else {
 		std::cout << "\nUsage: pdvps <your_file>\n\t\bpdvps --info\n\n";
 	}
-	return 0;
 }
 
 void Begin_Pdvps (char* argv[]) {
