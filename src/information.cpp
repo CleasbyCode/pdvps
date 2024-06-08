@@ -1,7 +1,7 @@
 void displayInfo() {
-
 	std::cout << R"(
-PNG Data Vehicle, PowerShell Edition (PDVPS v1.0.2). Created by Nicholas Cleasby (@CleasbyCode) 1/11/2022.
+PNG Data Vehicle, PowerShell Edition (PDVPS v1.0.2). 
+Created by Nicholas Cleasby (@CleasbyCode) 1/11/2022.
 
 Embed any file type within the default supplied PNG image to create a tweetable and 'executable' image.
 
