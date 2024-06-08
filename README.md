@@ -1,17 +1,13 @@
 # pdvps
 
-**PNG Data Vehicle (PowerShell Edition) for Twitter (5MB) and ~~Reddit (20MB)~~**
+**PNG Data Vehicle (PowerShell Edition) for X/Twitter**
 
 Embed any file type within a tweetable and "[*executable*](https://github.com/CleasbyCode/pdvps#extracting-your-file-from-the-png-image)" **PNG** image.  
-
-*Status update: \*Reddit (currently) no longer working with pdvps.*
 
 ![Demo Image](https://github.com/CleasbyCode/pdvps/blob/main/Demo_Image/pdv_soldier.png)  
 {*Encrypted **JPG** image embedded within this **PNG** image*} 
 
 [**Video Demo**](https://youtu.be/apN0QQzK6W4)
-
-Works for both **Windows** and ***Linux**. 
 
 (***PowerShell** required. *Always use the [***latest version***](https://github.com/PowerShell/PowerShell/releases) of PowerShell*).
 
@@ -29,7 +25,7 @@ extract and open your embedded file, when you "[*execute*](https://github.com/Cl
 For more information on the embedded **scripts** within the default **PNG** image,  
 see the [***scripts_info.txt***](https://github.com/CleasbyCode/pdvps/blob/main/src/scripts_info.txt) file supplied with this repo.
 
-For information about **PNG** image settings and arbitrary data preservation for **Twitter**,  
+For information about **PNG** image settings and arbitrary data preservation for **X/Twitter**,  
 visit the relevant link on [***pdvzip***](https://github.com/CleasbyCode/pdvzip#png-image-requirements-for-arbitrary-data-preservation)
 
 Always use file extensions for your data file: my_doc.pdf, my_video.mp4, my_program.py, etc.
@@ -39,7 +35,7 @@ Compile and run the program under **Windows** or **Linux**.
 ## Usage (Linux)
 
 ```console
-$ g++ pdvps.cpp -O2 -s -o pdvps
+$ g++ main.cpp -O2 -s -o pdvps
 $ ./pdvps
 
 Usage: pdvps <your_file>
@@ -55,11 +51,10 @@ Created output file ".\pdvps_image.png" 4232948 bytes.
 
 All Done.
 
-You can post this embedded image on both Twitter and Reddit.
+You can post this embedded image on X/Twitter.
 
 ```
-
-Once your file has been embedded within the **PNG** image, it's ready to be shared (tweeted) or "*executed*" whenever you want to extract and open your embedded file.
+Once your file has been embedded within the **PNG** image, it's ready to be shared or "*executed*" whenever you want to extract & open your embedded file.
 
 ## Extracting Your File From the PNG Image
 **Linux (PowerShell required)**    
@@ -71,7 +66,7 @@ $ ./pdvps_image.png
 
 ```  
 **Windows**   
-First, rename the '*.png*' file extension to '*.cmd*'.
+First, rename the '*.png*' file extension to '*.cmd*'
 ```console
 
 G:\demo> ren pdvps_image.png pdvps_image.cmd
