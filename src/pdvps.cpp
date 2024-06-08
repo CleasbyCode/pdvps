@@ -148,10 +148,10 @@ void startPdv(const std::string& DATA_FILENAME) {
 		uint_fast16_t hist_chunk_length_insert_index = 2242;	
 
 		// Initial hIST chunk size. This will grow as additional data items are inserted into the PowerShell script.
-		uint_fast32_t hist_chunk_length = 1271; 
-
 		// Get first IDAT chunk index.
-		uint_fast32_t hist_chunk_crc_insert_index = static_cast<uint_fast32_t>(std::search(Image_Vec.begin()+ hist_chunk_length_insert_index, Image_Vec.end(), IDAT_SIG.begin(), IDAT_SIG.end()) - Image_Vec.begin()) - 8;  
+		uint_fast32_t 
+			hist_chunk_length = 1271,
+			hist_chunk_crc_insert_index = static_cast<uint_fast32_t>(std::search(Image_Vec.begin()+ hist_chunk_length_insert_index, Image_Vec.end(), IDAT_SIG.begin(), IDAT_SIG.end()) - Image_Vec.begin()) - 8;  
 	
 		// Add to the current hIST chunk value the length values of all the data items we have inserted into the PowerShell script.
 		// This should now be the correct and final hIST chunk length.
@@ -176,7 +176,5 @@ void startPdv(const std::string& DATA_FILENAME) {
 
 		if (Image_Vec.size() > MAX_FILE_SIZE) {
 			std::cout << "Warning: Embedded image size exceeds 5MB.\n\nX/Twitter will convert this PNG image to JPG. Embedded content will be lost.\n\n";
-		} else {
-			std::cout << "You can post this embedded image on both Twitter and Reddit.\n\n";
-		}	
+		} 	
 	}
