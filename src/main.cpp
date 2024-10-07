@@ -1,7 +1,9 @@
-// PNG Data Vehicle, PowerShell Edition (PDVPS v1.0.2) for X/Twitter. Created by Nicholas Cleasby (@CleasbyCode) 1/11/2022.
+// PNG Data Vehicle, PowerShell Edition (PDVPS v1.2) for X/Twitter. Created by Nicholas Cleasby (@CleasbyCode) 1/11/2022.
 
-// Compile program (Linux): $ g++ main.cpp -O2 -s -o pdvps
-// Run program: ./pdvps
+// Compile program (Linux): 
+// $ g++ main.cpp -O2 -s -o pdvps
+// $ sudo cp pdvps /usr/bin
+// $ pdvps
 
 #include "pdvps.h"
 
