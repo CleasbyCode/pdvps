@@ -2,7 +2,7 @@ void startPdv(const std::string& DATA_FILENAME) {
 
 	const size_t TMP_DATA_FILE_SIZE = std::filesystem::file_size(DATA_FILENAME);
 
-	constexpr uint_fast32_t MAX_FILE_SIZE = 5242880;
+	constexpr uint32_t MAX_FILE_SIZE = 5242880;
 	
 	if (TMP_DATA_FILE_SIZE > MAX_FILE_SIZE) {
 		std::cerr << "\nFile Size Error: Data file exceeds the maximum limit of 5MB.\n\n";
@@ -16,9 +16,9 @@ void startPdv(const std::string& DATA_FILENAME) {
 		std::exit(EXIT_FAILURE);
 	}
 
-	std::vector<uint_fast8_t>Data_Vec((std::istreambuf_iterator<char>(data_file_ifs)), std::istreambuf_iterator<char>());  
+	std::vector<uint8_t>Data_Vec((std::istreambuf_iterator<char>(data_file_ifs)), std::istreambuf_iterator<char>());  
 	
-	const uint_fast32_t DATA_FILE_SIZE = static_cast<uint_fast32_t>(Data_Vec.size());
+	const uint32_t DATA_FILE_SIZE = static_cast<uint32_t>(Data_Vec.size());
 
 	// Convert user data file size value to a string. 
 	// This string will be inserted into the '$fl' (File Length) variable for the embedded PowerShell (PS) script.
@@ -37,10 +37,10 @@ void startPdv(const std::string& DATA_FILENAME) {
 				// [3] "" '$ext' File Extension of user data file, string variable.
 				// [4] "" '$fl', File Length value of user data file, variable.
 				// For more information about the PowerShell script, see the "scripts_info.txt" file that's part of this repo on GitHub. 
-		uint_fast32_t 
+		uint32_t 
 			pwsh_insert_index[5] = { DATA_FILE_SIZE + 2806, DATA_FILE_SIZE + 2413, DATA_FILE_SIZE + 2406, DATA_FILE_SIZE + 2303, DATA_FILE_SIZE + 2296 },
-			name_length = static_cast<uint_fast32_t>(DATA_FILENAME.length()),
-			dot_pos = static_cast<uint_fast32_t>(DATA_FILENAME.find_last_of('.'));
+			name_length = static_cast<uint32_t>(DATA_FILENAME.length()),
+			dot_pos = static_cast<uint32_t>(DATA_FILENAME.find_last_of('.'));
 
 		if (dot_pos == 0 || dot_pos > name_length) {
 			file_ext = ".exe";
@@ -51,7 +51,7 @@ void startPdv(const std::string& DATA_FILENAME) {
 		// If user file_ext is Python, PowerShell or an Executable, you can add command-line arguments for these files, if required.
 		if (file_ext == ".py" || file_ext == ".ps1" || file_ext == ".exe") {
 			
-			const uint_fast8_t MAX_ARGS_LENGTH = 100;  
+			const uint8_t MAX_ARGS_LENGTH = 100;  
 
 			std::cout << "\nFor this file type you can provide command-line arguments here, if required.\n\nLinux: ";
 			std::getline(std::cin, args_linux);
@@ -63,25 +63,25 @@ void startPdv(const std::string& DATA_FILENAME) {
 			}
 		}
 		
-		const uint_fast16_t
+		const uint16_t
 			XOR_KEY_START_INDEX = 2252,	// This is the start index location of the 4 byte CRC value, used for basic xor encryption.
 			XOR_KEY_END_INDEX = 2257;   	// End location for our 5 byte xor key (include one extra byte after CRC value). 
 
-		uint_fast8_t bits = 32;		
+		uint8_t bits = 32;		
 
 		// Write a 4 byte CRC value at index location.
-		valueUpdater(Image_Vec, XOR_KEY_START_INDEX, crcUpdate(&Data_Vec[0], static_cast<uint_fast32_t>(Data_Vec.size())), bits);
+		valueUpdater(Image_Vec, XOR_KEY_START_INDEX, crcUpdate(&Data_Vec[0], static_cast<uint32_t>(Data_Vec.size())), bits);
 
-		uint_fast16_t xor_key_pos = XOR_KEY_START_INDEX;
+		uint16_t xor_key_pos = XOR_KEY_START_INDEX;
 				
 		// Index location within image file for inserting user data file.
-		const uint_fast16_t DATA_FILE_INSERT_INDEX = 2251;
+		const uint16_t DATA_FILE_INSERT_INDEX = 2251;
 
 		std::cout << "\nEncrypting and embedding data file within PNG image.\n";
 
-		std::vector<uint_fast8_t>Encrypt_Vec;
+		std::vector<uint8_t>Encrypt_Vec;
 
-		for (uint_fast32_t index = 0; index < DATA_FILE_SIZE; index++) {
+		for (uint32_t index = 0; index < DATA_FILE_SIZE; index++) {
 
 			Encrypt_Vec.emplace_back(Data_Vec[index] ^ Image_Vec[xor_key_pos++]);
 			xor_key_pos = xor_key_pos == XOR_KEY_END_INDEX ? XOR_KEY_START_INDEX : xor_key_pos;
@@ -91,7 +91,7 @@ void startPdv(const std::string& DATA_FILENAME) {
 
 		const std::string BLOCK_ID = "#>"; // Problem characters.
 
-		uint_fast32_t repair_code_length = 0;
+		uint32_t repair_code_length = 0;
 
 		// The data file CANNOT contain any occurrence of the PowerShell end-comment-block string "#>" (0x23, 0x3E).
 		// The embedded PowerShell script will break if it encounters the end-comment-block string anywhere in the data file. 
@@ -104,13 +104,13 @@ void startPdv(const std::string& DATA_FILENAME) {
 		if (DATA_FILE_SIZE + DATA_FILE_INSERT_INDEX >= std::search(Image_Vec.begin(), Image_Vec.end(), BLOCK_ID.begin(), BLOCK_ID.end()) - Image_Vec.begin()) {
 			std::string index_locations = "";
 
-			for (uint_fast32_t block_index = 0; DATA_FILE_SIZE + DATA_FILE_INSERT_INDEX > block_index;) {
+			for (uint32_t block_index = 0; DATA_FILE_SIZE + DATA_FILE_INSERT_INDEX > block_index;) {
 				if (block_index > 0) {
 					// Build up a string containing index locations for every modified end-comment-block string found within data file.
 					index_locations += std::to_string(block_index) + ',';
 					Image_Vec[block_index] = 'X';  // Change the '#' character of each end-comment-block string.
 				}
-				block_index = static_cast<uint_fast32_t>(std::search(Image_Vec.begin() + block_index + 1, Image_Vec.end(), BLOCK_ID.begin(), BLOCK_ID.end()) - Image_Vec.begin());
+				block_index = static_cast<uint32_t>(std::search(Image_Vec.begin() + block_index + 1, Image_Vec.end(), BLOCK_ID.begin(), BLOCK_ID.end()) - Image_Vec.begin());
 			}
 
 			// String contains PowerShell 'repair code' to be inserted into the embedded script within the PNG image.
@@ -123,7 +123,7 @@ void startPdv(const std::string& DATA_FILENAME) {
 			repair_code.erase(remove(repair_code.end() - 51, repair_code.end(), ','), repair_code.end());
 
 			// We need this length value for when we later update the hIST chunk size.
-			repair_code_length += static_cast<uint_fast32_t>(repair_code.length());
+			repair_code_length += static_cast<uint32_t>(repair_code.length());
 
 			// Insert PowerShell 'repair code' string into the embedded PowerShell script at correct index location within default image file.
 			Image_Vec.insert(Image_Vec.begin() + pwsh_insert_index[0], repair_code.begin(), repair_code.end());
@@ -145,22 +145,22 @@ void startPdv(const std::string& DATA_FILENAME) {
 		const std::string IDAT_SIG = "IDAT";
 
 		// Index location in image file for hIST chunk length field. 
-		uint_fast16_t hist_chunk_length_insert_index = 2242;	
+		uint16_t hist_chunk_length_insert_index = 2242;	
 
 		// Initial hIST chunk size. This will grow as additional data items are inserted into the PowerShell script.
 		// Get first IDAT chunk index.
-		uint_fast32_t 
+		uint32_t 
 			hist_chunk_length = 1271,
-			hist_chunk_crc_insert_index = static_cast<uint_fast32_t>(std::search(Image_Vec.begin()+ hist_chunk_length_insert_index, Image_Vec.end(), IDAT_SIG.begin(), IDAT_SIG.end()) - Image_Vec.begin()) - 8;  
+			hist_chunk_crc_insert_index = static_cast<uint32_t>(std::search(Image_Vec.begin()+ hist_chunk_length_insert_index, Image_Vec.end(), IDAT_SIG.begin(), IDAT_SIG.end()) - Image_Vec.begin()) - 8;  
 	
 		// Add to the current hIST chunk value the length values of all the data items we have inserted into the PowerShell script.
 		// This should now be the correct and final hIST chunk length.
-		hist_chunk_length += DATA_FILE_SIZE + repair_code_length + static_cast<uint_fast32_t>(file_ext.length() + data_size_length_string.length() + args_linux.length() + args_windows.length());
+		hist_chunk_length += DATA_FILE_SIZE + repair_code_length + static_cast<uint32_t>(file_ext.length() + data_size_length_string.length() + args_linux.length() + args_windows.length());
 
 		valueUpdater(Image_Vec, hist_chunk_length_insert_index, hist_chunk_length, bits);
 		valueUpdater(Image_Vec, hist_chunk_crc_insert_index, crcUpdate(&Image_Vec[hist_chunk_length_insert_index + 4], hist_chunk_length + 4), bits);
 
-		const uint_fast8_t SLASH_POS = static_cast<uint_fast8_t>(DATA_FILENAME.find_last_of("\\/")) + 1;
+		const uint8_t SLASH_POS = static_cast<uint8_t>(DATA_FILENAME.find_last_of("\\/")) + 1;
 
 		// Create filename for output file, e.g. "my_music_file.mp3" = "pdv_my_music_file.mp3.png"
 		const std::string OUTPUT_NAME = DATA_FILENAME.substr(0, SLASH_POS) + "pdv" + "_" + DATA_FILENAME.substr(SLASH_POS, DATA_FILENAME.length()) + ".png";
