@@ -17,5 +17,5 @@
 
 void
 	startPdv(const std::string&),
-	valueUpdater(std::vector<uint_fast8_t>&, uint_fast32_t, const uint_fast32_t, uint_fast8_t),
+	valueUpdater(std::vector<uint8_t>&, uint32_t, const uint32_t, uint8_t),
 	displayInfo();
